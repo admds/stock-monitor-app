@@ -7,9 +7,7 @@ var app = express();
 
 app.set('port', (process.env.PORT || 3000));
 
-app.get('/', function(request, response) {
-	response.send('Hello World!!!');
-});
+app.use( '/', express.static('client'));
 
 app.listen(app.get('port'), function() {
 	winston.info('Application is ready! Go to http://localhost:' + app.get('port'));
