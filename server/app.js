@@ -1,22 +1,16 @@
 'use strict';
 
-var ExpressServer = require('express-server');
+var express = require('express');
 var winston = require('winston');
 
-var server = new ExpressServer({
-	name: 'My Express Server',
-	port: 3000,
-  requestLog: true,
-	logLevel: 'debug'
+var app = express();
+
+app.set('port', (process.env.PORT || 3000));
+
+app.get('/', function(request, response) {
+	response.send('Hello World!!!');
 });
 
-server.set('port', (process.env.PORT || 3000));
-
-server.start(function() {
-	winston.info('Application is ready! Go to http://localhost:' + server.port);
+app.listen(app.get('port'), function() {
+	winston.info('Application is ready! Go to http://localhost:' + app.get('port'));
 });
-
-process.on('SIGINT', function() {
-	server.stop();
-	process.exit();
-}.bind(this)); // jshint ignore:line
