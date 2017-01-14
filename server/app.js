@@ -1,3 +1,5 @@
+'use strict';
+
 var ExpressServer = require('express-server');
 var winston = require('winston');
 
@@ -15,4 +17,4 @@ server.start(function() {
 process.on('SIGINT', function() {
 	server.stop();
 	process.exit();
-}.bind(this));
+}.bind(this)); // jshint ignore:line
