@@ -6,9 +6,11 @@ var winston = require('winston');
 var server = new ExpressServer({
 	name: 'My Express Server',
 	port: 3000,
-    requestLog: true,
-		logLevel: 'debug'
+  requestLog: true,
+	logLevel: 'debug'
 });
+
+server.set('port', (process.env.PORT || 3000));
 
 server.start(function() {
 	winston.info('Application is ready! Go to http://localhost:' + server.port);
