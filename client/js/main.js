@@ -19,14 +19,9 @@ angular.module('stockMonitorApp.index', ['ngRoute','ngAnimate', 'ngSanitize', 'u
     };
 
     $scope.getStock = function(stockSymbol) {
-        //TODO: Save creds on server-side
-        var username = "test_username";
-        var password = "test_password";
-        var auth = "Basic " + window.btoa(username + ':' + password);
-
-        return $http.get('https://api.intrinio.com/companies?ticker=NFLX', {
-            headers: {
-                "Authorization": auth
+        return $http.get('/stock-info', {
+            params: {
+                symbol: stockSymbol
             }
         }).then(function(response){
             console.log(response);

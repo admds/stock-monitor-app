@@ -12,6 +12,16 @@
 
 </head>
 <body>
+    <!-- Dependencies - Angular -->
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-sanitize.js"></script>
+
+    <!-- Dependencies - Bootstrap -->
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
     <div>Stock Monitor</div>
     <ul class="menu">
         <li><a href="#!/view1">view1</a></li>
@@ -24,22 +34,12 @@
 
     <div ng-view></div>
 
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- In production use:
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
-    -->
-
     <!-- <script src="bower_components/jquery/src/jquery.js"></script> -->
 
-    <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/angular-route/angular-route.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-sanitize.js"></script>
+    <!-- Server -->
+    <script src="app.js"></script>  
 
-    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-
-    <script src="app.js"></script>
+    <!-- Client -->
     <script src="html/view1/view1.js"></script>
     <script src="js/main.js"></script>
 </body>
