@@ -3,7 +3,6 @@
 // Declare app level module which depends on views, and components
 angular.module('stockMonitorApp', [
   'ngRoute',
-  'stockMonitorApp.view1',
   'stockMonitorApp.index'
 ]).
 config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {

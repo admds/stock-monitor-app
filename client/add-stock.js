@@ -4,7 +4,7 @@ angular.module('stockMonitorApp.index', ['ngRoute','ngAnimate', 'ngSanitize', 'u
 
 .config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/index', {
-        templateUrl: '../html/index.html',
+        templateUrl: '/add-stock.html',
         controller: 'StockLookupCtrl'
     });
 }])
