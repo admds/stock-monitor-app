@@ -4,9 +4,10 @@
 angular.module('stockMonitorApp', [
   'ngRoute',
   'stockMonitorApp.view1',
+  'stockMonitorApp.index'
 ]).
 config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
   $locationProvider.hashPrefix('!');
 
-  $routeProvider.otherwise({redirectTo: '/view1'});
+  $routeProvider.otherwise({redirectTo: '/index'});
 }]);
