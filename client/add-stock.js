@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('stockMonitorApp.index', ['ngRoute','ngAnimate', 'ngSanitize', 'ui.bootstrap'])
+angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])
 
 .config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/index', {
@@ -9,7 +9,7 @@ angular.module('stockMonitorApp.index', ['ngRoute','ngAnimate', 'ngSanitize', 'u
     });
 }])
 
-.controller('StockLookupCtrl', function($scope, $http) {
+.controller('StockLookupCtrl', function($scope, $http, $cookies) {
 
     $scope.initialize = function() {
         window.setTimeout(function() {
@@ -25,6 +25,9 @@ angular.module('stockMonitorApp.index', ['ngRoute','ngAnimate', 'ngSanitize', 'u
                     symbol: $scope.symbolEntered
                 }
             }).then(function(response){
+                //Setting cookie
+                $cookies.put('stock-list', response.data.ticker);
+
                 console.log(response);
             });
         }
