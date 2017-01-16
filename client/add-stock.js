@@ -18,14 +18,16 @@ angular.module('stockMonitorApp.index', ['ngRoute','ngAnimate', 'ngSanitize', 'u
         console.log('StockLookupCtrl init');
     };
 
-    $scope.getStock = function(stockSymbol) {
-        return $http.get('/stock-info', {
-            params: {
-                symbol: stockSymbol
-            }
-        }).then(function(response){
-            console.log(response);
-        });
+    $scope.submit = function() {
+        if ($scope.symbolEntered) {
+            return $http.get('/stock-info', {
+                params: {
+                    symbol: $scope.symbolEntered
+                }
+            }).then(function(response){
+                console.log(response);
+            });
+        }
     };
 
     $scope.initialize();
