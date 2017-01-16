@@ -19,17 +19,33 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
     };
 
     $scope.submit = function() {
-        if ($scope.symbolEntered) {
-            return $http.get('/stock-info', {
-                params: {
-                    symbol: $scope.symbolEntered
-                }
-            }).then(function(response){
-                //Setting cookie
-                $cookies.put('stock-list', response.data.ticker);
 
-                console.log(response);
-            });
+        //Check if symbol was indeed entered into the field
+        if ($scope.symbolEntered) {
+
+            //Check if already watching entered symbol
+            var cookieExists = $cookies.get("stock." + $scope.symbolEntered.toUpperCase());
+
+            //If not watching - make the GET call to retrieve stock information
+            if (!cookieExists) {
+                return $http.get('/stock-info', {
+                    params: {
+                        symbol: $scope.symbolEntered
+                    }
+                }).then(function(response){
+                    //Setting cookie
+                    $cookies.put('stock.' + response.data.ticker, new Date());
+
+                    console.log(response);
+                });
+            }
+            else {
+                //TODO: Print near input field too
+                console.log('Already Watching ' + $scope.symbolEntered.toUpperCase());
+            }
+
+
+
         }
     };
 
