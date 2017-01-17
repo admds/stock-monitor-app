@@ -1,3 +1,4 @@
+/* globals angular */
 'use strict';
 
 angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])

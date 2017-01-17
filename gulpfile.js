@@ -11,17 +11,18 @@ gulp.task('default', function() {
 });
 
 gulp.task('lint', function() {
-  return gulp.src('./server//*.js')
+    return gulp.src(['./server/*.js', './client/*.js'])
     .pipe(jshint())
     .pipe(jshint.reporter('default'));
 });
 
-gulp.task('serve', function() {
-  browserSync({
-    server: {
-      baseDir: 'client'
-    }
-  });
+gulp.task('serve', function(callback) {
+    var spawn = require('child_process').spawn;
+    spawn('node', ['server/app.js'], { stdio: 'inherit' });
 
-  gulp.watch(['*.html', 'styles/**/*.css', 'scripts/**/*.js'], {cwd: '.'}, reload);
+    browserSync({
+        proxy: 'localhost:5555'
+    });
+
+    gulp.watch(['/client/*.html', 'client/*.js'], {cwd: '.'}, reload);
 });
