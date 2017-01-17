@@ -11,7 +11,7 @@ gulp.task('default', function() {
 });
 
 gulp.task('lint', function() {
-    return gulp.src(['./server/*.js', './client/*.js'])
+    return gulp.src(['./server/*.js', './client/*.js', './cli/*.js'])
     .pipe(jshint())
     .pipe(jshint.reporter('default'));
 });

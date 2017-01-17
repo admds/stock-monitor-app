@@ -3,7 +3,7 @@
 var express = require('express');
 var httpRequest = require('request');
 var winston = require('winston');
-
+var allStockCompanies = require('../all-companies.json');
 var router = express.Router();
 
 router.get('/', function(request, response) {
@@ -24,7 +24,7 @@ router.get('/', function(request, response) {
 	}
     else
     {
-    	response.send('no stock symbol');
+    	response.send(allStockCompanies);
     }
 });
 
