@@ -11,6 +11,8 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 
 .controller('StockLookupCtrl', function($scope, $http, $cookies) {
 
+    $scope.alerts = [];
+
     $scope.initialize = function() {
         window.setTimeout(function() {
             $scope.$apply();
@@ -19,7 +21,6 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
     };
 
     $scope.submit = function() {
-
         //Check if symbol was indeed entered into the field
         if ($scope.symbolEntered) {
 
@@ -35,18 +36,20 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
                 }).then(function(response){
                     //Setting cookie
                     $cookies.put('stock.' + response.data.ticker, new Date());
-
                     console.log(response);
                 });
             }
+            //If watching - show an alert indicating that it is being watched already
             else {
-                //TODO: Print near input field too
-                console.log('Already Watching ' + $scope.symbolEntered.toUpperCase());
+                $scope.alerts.push({msg: 'Already watching: ' + $scope.symbolEntered.toUpperCase()});
             }
-
-
-
         }
+    };
+
+    $scope.remove = function() {
+        //TODO: Figure out selector value because there will be more than one from which to choose
+        // like I have 2 stocks, but should only remove 1.
+        // $cookies.remove("stock." + $scope.seeAboveComment);
     };
 
     $scope.initialize();
