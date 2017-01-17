@@ -9,7 +9,7 @@ var stockInfo = require('./stock-info');
 
 var app = express();
 
-app.set('port', (process.env.PORT || 3000));
+app.set('port', (process.env.PORT || 5555));
 
 app.use('/', express.static('client'));
 
