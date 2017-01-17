@@ -47,6 +47,11 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
         }
     };
 
+    $scope.closeAlert = function(index) {
+        $scope.alerts.splice(index, 1);
+    };
+
+    //Removes view of WATCHED and deletes cookie
     $scope.remove = function() {
         //TODO: Figure out selector value because there will be more than one from which to choose
         // like I have 2 stocks, but should only remove 1.

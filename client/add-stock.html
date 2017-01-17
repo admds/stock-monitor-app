@@ -4,7 +4,7 @@
 
 <form ng-submit="submit()" ng-controller="StockLookupCtrl" class="navbar-form navbar-left" role="search">
 
-    <div uib-alert ng-repeat="alert in alerts" ng-class="'alert-warning'" close="closeAlert($index)">{{alert.msg}}</div>
+    <div uib-alert dismiss-on-timeout="5000" ng-repeat="alert in alerts" close="closeAlert($index)" ng-class="'alert-warning'">{{alert.msg}}</div>
 
     <pre>Stock Lookup: {{symbolEntered}}</pre>
     <div class="form-group">
