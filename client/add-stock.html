@@ -2,13 +2,25 @@
     <div ng-transclude></div>
 </script>
 
+<script type="text/ng-template" id="typeahead.html">
+  <a>
+      <span ng-bind-html="match.model.ticker | uibTypeaheadHighlight:query"></span>
+      - {{match.model.name}}
+  </a>
+</script>
+
 <form ng-submit="submit()" ng-controller="StockLookupCtrl" class="navbar-form navbar-left" role="search">
 
     <div uib-alert dismiss-on-timeout="5000" ng-repeat="alert in alerts" close="closeAlert($index)" ng-class="'alert-warning'">{{alert.msg}}</div>
 
-    <pre>Stock Lookup: {{symbolEntered}}</pre>
+    <pre>Stock Lookup: {{selectedSymbol.ticker}} {{selectedSymbol.name}}</pre>
     <div class="form-group">
-        <input type="text" ng-model="symbolEntered" placeholder="ex: AMD, GE, MMP" class="form-control">
+        <input type="text"
+                ng-model="selectedSymbol"
+                uib-typeahead="stockInfo as stockInfo.ticker for stockInfo in stockCompanies | filter:$viewValue | limitTo:20"
+                placeholder="ex: AMD, GE, MMP"
+                class="form-control"
+                typeahead-template-url="typeahead.html"/>
     </div>
-    <button type="submit" class="btn btn-default">Submit</button>
+    <button type="submit" class="btn btn-primary">Submit</button>
 </form>

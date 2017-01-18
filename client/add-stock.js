@@ -11,28 +11,32 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 }])
 
 .controller('StockLookupCtrl', function($scope, $http, $cookies) {
-
     $scope.alerts = [];
-
+    $scope.selectedSymbol = undefined;
     $scope.initialize = function() {
-        window.setTimeout(function() {
-            $scope.$apply();
-        }, 10000);
+        $scope.stockCompanies = [];
+        $scope.loadStockCompanies();
         console.log('StockLookupCtrl init');
     };
 
+    $scope.loadStockCompanies = function() {
+        $http.get('/stock-info').then(function(response) {
+            $scope.stockCompanies = response.data;
+        });
+    }
+
     $scope.submit = function() {
         //Check if symbol was indeed entered into the field
-        if ($scope.symbolEntered) {
+        if ($scope.selectedSymbol.ticker) {
 
             //Check if already watching entered symbol
-            var cookieExists = $cookies.get("stock." + $scope.symbolEntered.toUpperCase());
+            var cookieExists = $cookies.get("stock." + $scope.selectedSymbol.ticker.toUpperCase());
 
             //If not watching - make the GET call to retrieve stock information
             if (!cookieExists) {
                 return $http.get('/stock-info', {
                     params: {
-                        symbol: $scope.symbolEntered
+                        symbol: $scope.selectedSymbol.ticker
                     }
                 }).then(function(response){
                     //Setting cookie
@@ -42,7 +46,7 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
             }
             //If watching - show an alert indicating that it is being watched already
             else {
-                $scope.alerts.push({msg: 'Already watching: ' + $scope.symbolEntered.toUpperCase()});
+                $scope.alerts.push({msg: 'Already watching: ' + $scope.selectedSymbol.ticker.toUpperCase()});
             }
         }
     };
