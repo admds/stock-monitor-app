@@ -62,9 +62,13 @@ let run = function(file) {
     let pageNumber = 1;
     let companies = [];
     getCompaniesForPage(companies, pageNumber, (allCompanies) => {
-        logger.info('Companies:', allCompanies);
         fs.writeFile(file, allCompanies, function(error) {
-            logger.error('There was an error writing to the file "%s"', file, error);
+            if (error) {
+                logger.error('There was an error writing to the file "%s"', file, JSON.stringify(error));
+                return;
+            }
+
+            logger.info('Successfully wrote all company information to %s.', file);
         });
     });
 };
