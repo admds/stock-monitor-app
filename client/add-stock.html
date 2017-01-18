@@ -1,12 +1,8 @@
-<script type="text/ng-template" id="alert.html">
-    <div ng-transclude></div>
-</script>
-
 <script type="text/ng-template" id="typeahead.html">
-  <a>
-      <span ng-bind-html="match.model.ticker | uibTypeaheadHighlight:query"></span>
-      - {{match.model.name}}
-  </a>
+    <a>
+        <span ng-bind-html="match.model.ticker | uibTypeaheadHighlight:query"></span>
+        - {{match.model.name}}
+    </a>
 </script>
 
 <form ng-submit="submit()" ng-controller="StockLookupCtrl" class="navbar-form navbar-left" role="search">
@@ -16,11 +12,18 @@
     <pre>Stock Lookup: {{selectedSymbol.ticker}} {{selectedSymbol.name}}</pre>
     <div class="form-group">
         <input type="text"
-                ng-model="selectedSymbol"
-                uib-typeahead="stockInfo as stockInfo.ticker for stockInfo in stockCompanies | filter:$viewValue | limitTo:20"
-                placeholder="ex: AMD, GE, MMP"
-                class="form-control"
-                typeahead-template-url="typeahead.html"/>
+        ng-model="selectedSymbol"
+        uib-typeahead="stockInfo as stockInfo.ticker for stockInfo in stockCompanies | filter:$viewValue | limitTo:20"
+        placeholder="ex: AMD, GE, MMP"
+        class="form-control"
+        typeahead-template-url="typeahead.html"/>
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
+
+    <div uib-accordion close-others="oneAtATime">
+        <div uib-accordion-group class="panel-default" heading="{{group.ticker}} - {{group.name}}" ng-repeat="group in groups">
+            <h5>{{group.sector}} >> {{group.industry_category}} >> {{group.industry_group}}</h5>
+            Current Price: {{group.current_price}}
+        </div>
+    </div>
 </form>
