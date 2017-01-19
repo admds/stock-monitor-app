@@ -21,9 +21,13 @@
     <button type="submit" class="btn btn-primary">Submit</button>
 
     <div uib-accordion close-others="oneAtATime">
-        <div uib-accordion-group class="panel-default" heading="{{group.ticker}} - {{group.name}}" ng-repeat="group in groups">
+        <div uib-accordion-group class="panel-default" ng-repeat="group in groups">
+            <uib-accordion-heading>
+                {{group.ticker}} - {{group.name}}<i class="pull-right glyphicon" ng-class="'glyphicon-remove'" ng-click="removeStock($index)"></i>
+            </uib-accordion-heading>
             <h5>{{group.sector}} >> {{group.industry_category}} >> {{group.industry_group}}</h5>
-            Current Price: {{group.current_price}}
         </div>
     </div>
+</uib-accordion>
+
 </form>
