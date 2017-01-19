@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-'user strict';
+'use strict';
 
 let httpRequest = require('request');
 let commandLine = require('commander');
@@ -54,7 +54,7 @@ let getCompaniesForPage = function(companies, pageNumber, callback) {
             }
     })
     .auth(credentials.username, credentials.password, false);
-}
+};
 
 let run = function(file) {
     setupLogger();

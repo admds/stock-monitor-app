@@ -5,7 +5,9 @@ var winston = require('winston');
 
 //Require for stock-info
 var bodyParser = require('body-parser');
-var stockInfo = require('./stock-info');
+var informationRoute = require('./routes/information');
+var pricesRoute = require('./routes/prices');
+var newsRoute = require('./routes/news');
 
 var app = express();
 
@@ -14,7 +16,9 @@ app.set('port', (process.env.PORT || 5555));
 app.use('/', express.static('client'));
 
 app.use(bodyParser.json());
-app.use('/stock-info', stockInfo);
+app.use('/information', informationRoute);
+app.use('/prices', pricesRoute);
+app.use('/news', newsRoute);
 
 app.listen(app.get('port'), function() {
 	winston.info('Application is ready! Go to http://localhost:' + app.get('port'));

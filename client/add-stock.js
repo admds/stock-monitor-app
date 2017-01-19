@@ -23,7 +23,7 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
         $scope.loadStockCompanies();
 
         //If there are no displayed stocks, check cookies to display
-        if ($scope.groups.length == 0) {
+        if ($scope.groups.length === 0) {
             $scope.displayWatchedStocks();
         }
 
@@ -34,17 +34,17 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
         $http.get('/stock-info').then(function(response) {
             $scope.stockCompanies = response.data;
         });
-    }
+    };
 
     $scope.displayWatchedStocks = function () {
         var cookies = $cookies.getAll();
 
         for(var property in cookies) {
-            if (property.indexOf('stock.') == 0) {
+            if (property.indexOf('stock.') === 0) {
                 $scope.displayStockInfo(JSON.parse(cookies[property]), true);
             }
         }
-    }
+    };
 
     $scope.submit = function() {
         //Check if symbol was indeed entered into the field
@@ -85,7 +85,7 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
         }
 
         $scope.groups.push(stockInfo);
-    }
+    };
 
     $scope.closeAlert = function(index) {
         $scope.alerts.splice(index, 1);
