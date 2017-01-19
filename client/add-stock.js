@@ -32,7 +32,7 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 
     //Loads static list of stocks for easy search
     $scope.loadStockCompanies = function() {
-        $http.get('/stock-info').then(function(response) {
+        $http.get('/information').then(function(response) {
             $scope.stockCompanies = response.data;
         });
     };
@@ -56,7 +56,7 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 
             //If not watching - make the GET call to retrieve stock information
             if (!cookieExists) {
-                return $http.get('/stock-info', {
+                return $http.get('/information', {
                     params: {
                         symbol: $scope.selectedSymbol.ticker
                     }
@@ -72,7 +72,6 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
                     $scope.displayStockInfo(stockInfo, false);
                 });
             }
-            //If watching - show an alert indicating that it is being watched already
             else {
                 $scope.alerts.push({msg: 'Already watching: ' + $scope.selectedSymbol.ticker.toUpperCase()});
             }

@@ -25,7 +25,9 @@
             <uib-accordion-heading>
                 {{group.ticker}} - {{group.name}}<i class="pull-right glyphicon" ng-class="'glyphicon-remove'" ng-click="removeStock($index)"></i>
             </uib-accordion-heading>
-            <h5>{{group.sector}} >> {{group.industry_category}} >> {{group.industry_group}}</h5>
+            <h5>Sector: {{group.sector}}</h5>
+            <h5>Industry Category: {{group.industry_category}}</h5>
+            <h5>Industry Group: {{group.industry_group}}</h5>
         </div>
     </div>
 </uib-accordion>
