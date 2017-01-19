@@ -30,6 +30,7 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
         console.log('StockLookupCtrl init');
     };
 
+    //Loads static list of stocks for easy search
     $scope.loadStockCompanies = function() {
         $http.get('/stock-info').then(function(response) {
             $scope.stockCompanies = response.data;
@@ -92,10 +93,12 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
     };
 
     //Removes view of WATCHED and deletes cookie
-    $scope.remove = function() {
-        //TODO: Figure out selector value because there will be more than one from which to choose
-        // like I have 2 stocks, but should only remove 1.
-        // $cookies.remove("stock." + $scope.seeAboveComment);
+    $scope.removeStock = function(index) {
+        var ticker = $scope.groups[index].ticker;
+        console.log('removeStock: ' + ticker);
+
+        $cookies.remove('stock.' + ticker);
+        $scope.groups.splice(index, 1);
     };
 
     $scope.initialize();
