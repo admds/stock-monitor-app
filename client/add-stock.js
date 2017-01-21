@@ -11,12 +11,6 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 }])
 
 .controller('StockLookupCtrl', function($scope, $http, $cookies, $q) {
-    $scope.button = {
-        submit : {
-            text : "Submit",
-            loading : false
-        }
-    };
     $scope.oneAtATime = true;
     $scope.alerts = [];
     $scope.groups = [];
@@ -25,6 +19,7 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 
     $scope.initialize = function() {
         $scope.stockCompanies = [];
+        $scope.toggle = true;
         $scope.loadStockCompanies();
 
         //If there are no displayed stocks, check cookies to display
@@ -52,12 +47,11 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
         }
     };
 
+    //TODO: Add validation for invalid ticker symbols
     $scope.submit = function() {
-        $scope.button.submit.text = "Please wait";
-        $scope.button.submit.loading = true;
-
         //Check if symbol was indeed entered into the field
-        if ($scope.selectedSymbol.ticker) {
+
+        if ($scope.selectedSymbol && $scope.selectedSymbol.ticker) {
             var stockInfo;
 
             //Check if already watching entered symbol
@@ -65,7 +59,6 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 
             //If not watching - make the GET call to retrieve stock information
             if (!cookieExists) {
-
 
                 var informationCall = $http.get('/information', {
                     params: {
@@ -96,14 +89,18 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 
                     console.log(stockInfo);
                     $scope.displayStockInfo(stockInfo, false);
+                    $scope.toggle = true;
                 });
             }
             else {
+                $scope.toggle = true;
                 $scope.alerts.push({msg: 'Already watching: ' + $scope.selectedSymbol.ticker.toUpperCase()});
             }
         }
-        $scope.button.submit.text = "Submit";
-        $scope.button.submit.loading = false;
+        else {
+            $scope.toggle = true;
+            $scope.alerts.push({msg: 'Please enter ticker symbol.'});
+        }
     };
 
     $scope.calcMovingAverages = function(arrOfDataPoints, stockInfo) {

@@ -101,7 +101,11 @@
         class="form-control"
         typeahead-template-url="typeahead.html"/>
     </div>
-    <button type="submit" class="btn btn-primary">{{button.submit.text}}<i ng-show="button.submit.loading" class="glyphicon glyphicon-cog gly-spin"></i></button>
+
+    <button type="submit" class="btn btn-primary" ng-click="toggle = !toggle">
+        <span ng-show="toggle">Submit</span>
+        <span ng-hide="toggle">Loading <i class="glyphicon glyphicon-cog gly-spin"></i></span>
+    </button>
 
     <hr>
 
