@@ -11,7 +11,8 @@
         dismiss-on-timeout="3000"
         ng-repeat="alert in alerts"
         close="closeAlert($index)"
-        ng-class="'alert-warning'">{{alert.msg}}</div>
+        ng-class="'alert-warning'">{{alert.msg}}
+    </div>
 
     <pre>Stock Lookup: {{selectedSymbol.ticker}} {{selectedSymbol.name}}</pre>
     <div class="form-group">

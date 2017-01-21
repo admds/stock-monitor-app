@@ -9,7 +9,13 @@ div.panel-default.ng-scope.ng-isolate-scope.panel.panel-open > div.panel-heading
 }
 
 .alert-warning {
-    float: right;
+    position: fixed;
+    top: 70px;
+    width: 50%;
+}
+
+.panel-group {
+    width: 150%;
 }
 
 .btn {
