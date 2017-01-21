@@ -72,7 +72,6 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
                     $scope.displayStockInfo(stockInfo, false);
                 });
             }
-            //If watching - show an alert indicating that it is being watched already
             else {
                 $scope.alerts.push({msg: 'Already watching: ' + $scope.selectedSymbol.ticker.toUpperCase()});
             }
