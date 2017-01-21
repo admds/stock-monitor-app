@@ -22,7 +22,11 @@
         class="form-control"
         typeahead-template-url="typeahead.html"/>
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+
+    <button type="submit" class="btn btn-primary" ng-click="toggle = !toggle">
+        <span ng-show="toggle">Submit</span>
+        <span ng-hide="toggle">Loading <i class="glyphicon glyphicon-cog gly-spin"></i></span>
+    </button>
 
     <hr>
 
@@ -50,6 +54,12 @@
             <h5>Sector: {{stock.sector}}</h5>
             <h5>Industry Category: {{stock.industry_category}}</h5>
             <h5>Industry Group: {{stock.industry_group}}</h5>
+            <br/>
+            <a href="http://www.investopedia.com/university/movingaverage/movingaverages2.asp" target="_blank">Moving Averages</a>
+            <h5>MA(15): {{stock.movingAverages.days15}}</h5>
+            <h5>MA(50): {{stock.movingAverages.days50}}</h5>
+            <h5>MA(100): {{stock.movingAverages.days100}}</h5>
+            <h5>MA(200): {{stock.movingAverages.days200}}</h5>
         </div>
     </div>
 
@@ -64,11 +74,17 @@
                 <i class="pull-right glyphicon glyphicon-remove"
                     ng-click="removeStock(stock.ticker)"></i>
             </uib-accordion-heading>
+
             <h5>Sector: {{stock.sector}}</h5>
             <h5>Industry Category: {{stock.industry_category}}</h5>
             <h5>Industry Group: {{stock.industry_group}}</h5>
+            <br/>
+            <a href="http://www.investopedia.com/university/movingaverage/movingaverages2.asp" target="_blank">Moving Averages</a>
+            <h5>MA(15): {{stock.movingAverages.days15}}</h5>
+            <h5>MA(50): {{stock.movingAverages.days50}}</h5>
+            <h5>MA(100): {{stock.movingAverages.days100}}</h5>
+            <h5>MA(200): {{stock.movingAverages.days200}}</h5>
         </div>
     </div>
-</uib-accordion>
 
 </form>
