@@ -5,8 +5,7 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 
 .config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/index', {
-        templateUrl: '/add-stock.html',
-        controller: 'StockLookupCtrl'
+        templateUrl: '/add-stock.html'
     });
 }])
 
@@ -54,8 +53,6 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 
         // Check if symbol was indeed entered into the field.
         if ($scope.selectedSymbol && $scope.selectedSymbol.ticker) {
-            var stockInfo;
-
             // Check if already watching entered symbol.
             var cookieExists = $cookies.get("stock." + $scope.selectedSymbol.ticker.toUpperCase());
 
@@ -73,7 +70,7 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
                     }
                 });
                 $q.all([informationCall, pricesCall]).then(function(arrayOfResults) {
-                    stockInfo = {
+                    var stockInfo = {
                         ticker : arrayOfResults[0].data.ticker,
                         name : arrayOfResults[0].data.name,
                         sector : arrayOfResults[0].data.sector,
@@ -89,6 +86,10 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
                     };
 
                     $scope.calcMovingAverages(arrayOfResults[1].data.data, stockInfo);
+
+                    // Save volume per day over last 3 months (more data points are not needed)
+                    var allVolume = arrayOfResults[1].data.data.map(function (dataPoint) {return dataPoint.volume;})
+                    stockInfo.volume = allVolume.slice(0, 90);
 
                     console.log(stockInfo);
                     $scope.displayStockInfo(stockInfo, false);
@@ -110,10 +111,10 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
         $scope.reverseStockOrder = !$scope.reverseStockOrder;
     }
 
-    // Display stock information.
+    // Display stock information and saves last 200 days of closing prices to cookie.
     $scope.calcMovingAverages = function(arrOfDataPoints, stockInfo) {
-        console.log("Calculating moving averages: 15, 50, 100, 200");
         var allClosePrices = arrOfDataPoints.map(function (dataPoint) {return dataPoint.close;})
+        stockInfo.closePrices = allClosePrices.slice(0, 200);
 
         stockInfo.movingAverages.days15 = $scope.calcMovingAverage(allClosePrices, 15);
         stockInfo.movingAverages.days50 = $scope.calcMovingAverage(allClosePrices, 50);
