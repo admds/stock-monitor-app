@@ -6,8 +6,12 @@
 </script>
 
 <form ng-submit="submit()" ng-controller="StockLookupCtrl" class="navbar-form navbar-left" role="search">
-
-    <div uib-alert dismiss-on-timeout="5000" ng-repeat="alert in alerts" close="closeAlert($index)" ng-class="'alert-warning'">{{alert.msg}}</div>
+    <div uib-alert
+        class="alert"
+        dismiss-on-timeout="3000"
+        ng-repeat="alert in alerts"
+        close="closeAlert($index)"
+        ng-class="'alert-warning'">{{alert.msg}}</div>
 
     <pre>Stock Lookup: {{selectedSymbol.ticker}} {{selectedSymbol.name}}</pre>
     <div class="form-group">
@@ -22,14 +26,47 @@
 
     <hr>
 
+    <div >
+        <select class="selectpicker show-tick" ng-model="orderStockBy" ng-change="sortStocks()">
+            <option value="ticker">Symbol</option>
+            <option value="name">Company Name</option>
+            <option value="price">Price</option>
+            <option value="sector">Sector</option>
+        </select>
+        <button type="button" class="btn btn-default" ng-click="reverseStockSorting()">
+            <span class="glyphicon glyphicon-sort"/>
+        </button>
+    </div>
+
+    <!-- Favorite Stocks -->
     <div uib-accordion close-others="oneAtATime">
-        <div uib-accordion-group class="panel-default" ng-repeat="group in groups">
+        <div uib-accordion-group class="panel-default" ng-repeat="stock in stocks | filter:{favorite:true} | orderBy:orderStockBy:reverseStockOrder">
             <uib-accordion-heading>
-                {{group.ticker}} - {{group.name}}<i class="pull-right glyphicon" ng-class="'glyphicon-remove'" ng-click="removeStock($index)"></i>
+                {{stock.ticker}} - {{stock.name}}
+                <i class="favorite glyphicon glyphicon-heart" ng-click="favoriteStock(stock.ticker)"></i>
+                <i class="pull-right glyphicon glyphicon-remove"
+                    ng-click="removeStock(stock.ticker)"></i>
             </uib-accordion-heading>
-            <h5>Sector: {{group.sector}}</h5>
-            <h5>Industry Category: {{group.industry_category}}</h5>
-            <h5>Industry Group: {{group.industry_group}}</h5>
+            <h5>Sector: {{stock.sector}}</h5>
+            <h5>Industry Category: {{stock.industry_category}}</h5>
+            <h5>Industry Group: {{stock.industry_group}}</h5>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Watched Stocks -->
+    <div uib-accordion close-others="oneAtATime">
+        <div uib-accordion-group class="panel-default" ng-repeat="stock in stocks | filter:{favorite:false} | orderBy:orderStockBy:reverseStockOrder">
+            <uib-accordion-heading>
+                {{stock.ticker}} - {{stock.name}}
+                <i class="favorite glyphicon glyphicon-heart-empty" ng-click="favoriteStock(stock.ticker)"></i>
+                <i class="pull-right glyphicon glyphicon-remove"
+                    ng-click="removeStock(stock.ticker)"></i>
+            </uib-accordion-heading>
+            <h5>Sector: {{stock.sector}}</h5>
+            <h5>Industry Category: {{stock.industry_category}}</h5>
+            <h5>Industry Group: {{stock.industry_group}}</h5>
         </div>
     </div>
 </uib-accordion>

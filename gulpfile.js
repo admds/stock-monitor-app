@@ -24,5 +24,5 @@ gulp.task('serve', function(callback) {
         proxy: 'localhost:5555'
     });
 
-    gulp.watch(['./client/*.html', './client/*.js'], {cwd: '.'}, reload);
+    gulp.watch(['./client/*.html', './client/*.js', './client/*.css'], {cwd: '.'}, reload);
 });

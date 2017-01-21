@@ -1,0 +1,21 @@
+div.panel-default.ng-scope.ng-isolate-scope.panel {
+    margin: 5px 5px 5px 5px;
+}
+
+div.panel-default.ng-scope.ng-isolate-scope.panel.panel-open > div.panel-heading {
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #2e6da4;
+}
+
+.alert-warning {
+    float: right;
+}
+
+.btn {
+    margin: 5px 5px 5px 5px;
+}
+
+.favorite {
+    margin-left: 30px
+}
