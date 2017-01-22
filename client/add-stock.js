@@ -83,12 +83,12 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
                     var allClosePrices = arrayOfResults[1].data.data.map(function (dataPoint) {return dataPoint.close;})
                     $scope.calcMovingAverages(allClosePrices, stockInfo);
 
-                    // RSI is an array of values based on a 14-day interval. 
-                    var rsi = $scope.calcRSI(allClosePrices, stockInfo);
+                    // RSI is an array of values based on a 14-day interval.
+                    var rsi = $scope.reverseArray($scope.calcRSI(allClosePrices, stockInfo));
 
                     // Save volume per day over last 3 months (more data points are not needed)
                     var allVolume = arrayOfResults[1].data.data.map(function (dataPoint) {return dataPoint.volume;})
-                    stockInfo.volume = allVolume.slice(0, 90);
+                    stockInfo.volume = $scope.reverseArray(allVolume.slice(0, 90));
 
                     console.log(stockInfo);
                     $scope.displayStockInfo(stockInfo, false);
@@ -112,12 +112,12 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 
     // Display stock information and saves last 200 days of closing prices to cookie.
     $scope.calcMovingAverages = function(allClosePrices, stockInfo) {
-        stockInfo.closePrices = allClosePrices.slice(0, 200);
+        stockInfo.movingAverages.days15 = $scope.reverseArray($scope.calcMovingAverage(allClosePrices, 15));
+        stockInfo.movingAverages.days50 = $scope.reverseArray($scope.calcMovingAverage(allClosePrices, 50));
+        stockInfo.movingAverages.days100 = $scope.reverseArray($scope.calcMovingAverage(allClosePrices, 100));
+        stockInfo.movingAverages.days200 = $scope.reverseArray($scope.calcMovingAverage(allClosePrices, 200));
 
-        stockInfo.movingAverages.days15 = $scope.calcMovingAverage(allClosePrices, 15);
-        stockInfo.movingAverages.days50 = $scope.calcMovingAverage(allClosePrices, 50);
-        stockInfo.movingAverages.days100 = $scope.calcMovingAverage(allClosePrices, 100);
-        stockInfo.movingAverages.days200 = $scope.calcMovingAverage(allClosePrices, 200);
+        stockInfo.closePrices = $scope.reverseArray(allClosePrices.slice(0, 200));
 
         return;
     };
@@ -233,6 +233,15 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
         }).indexOf(symbol);
         $scope.stocks.splice(index, 1);
     };
+
+    $scope.reverseArray = function (arr) {
+        var temp = [];
+        var length = arr.length;
+        for (var index = (length - 1); index !== 0; index--) {
+            temp.push(arr[index]);
+        }
+        return temp;
+    }
 
     $scope.initialize();
 });
