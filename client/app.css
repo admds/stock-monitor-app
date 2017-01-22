@@ -8,15 +8,14 @@ div.panel-default.ng-scope.ng-isolate-scope.panel.panel-open > div.panel-heading
     border-color: #2e6da4;
 }
 
-.alert-warning {
+.alert-danger {
     position: fixed;
-    top: 70px;
+    top: 10px;
+    right: 10px;
+    margin: 5px;
     width: 50%;
 }
 
-.panel-group {
-    width: 150%;
-}
 
 .btn {
     margin: 5px 5px 5px 5px;

@@ -5,29 +5,31 @@
     </a>
 </script>
 
-<form ng-submit="submit()" ng-controller="StockLookupCtrl" class="navbar-form navbar-left" role="search">
-    <div uib-alert
-        class="alert"
-        dismiss-on-timeout="3000"
-        ng-repeat="alert in alerts"
-        close="closeAlert($index)"
-        ng-class="'alert-warning'">{{alert.msg}}
-    </div>
+<div class="container-fluid" ng-controller="StockLookupCtrl" >
+    <form ng-submit="submit()" role="search">
+        <div uib-alert
+            class="alert"
+            dismiss-on-timeout="3000"
+            ng-repeat="alert in alerts"
+            close="closeAlert($index)"
+            ng-class="'alert-danger'">{{alert.msg}}
+        </div>
 
-    <pre>Stock Lookup: {{selectedSymbol.ticker}} {{selectedSymbol.name}}</pre>
-    <div class="form-group">
-        <input type="text"
-        ng-model="selectedSymbol"
-        uib-typeahead="stockInfo as stockInfo.ticker for stockInfo in stockCompanies | filter:$viewValue | limitTo:20"
-        placeholder="ex: AMD, GE, MMP"
-        class="form-control"
-        typeahead-template-url="typeahead.html"/>
-    </div>
+        <pre>Stock Lookup: {{selectedSymbol.ticker}} {{selectedSymbol.name}}</pre>
+        <div class="form-group">
+            <input type="text"
+            ng-model="selectedSymbol"
+            uib-typeahead="stockInfo as stockInfo.ticker for stockInfo in stockCompanies | filter:$viewValue | limitTo:20"
+            placeholder="ex: AMD, GE, MMP"
+            class="form-control"
+            typeahead-template-url="typeahead.html"/>
+        </div>
 
-    <button type="submit" class="btn btn-primary" ng-click="toggle = !toggle">
-        <span ng-show="toggle">Submit</span>
-        <span ng-hide="toggle">Loading <i class="glyphicon glyphicon-cog gly-spin"></i></span>
-    </button>
+        <button type="submit" class="btn btn-primary" ng-click="toggle = !toggle">
+            <span ng-show="toggle">Submit</span>
+            <span ng-hide="toggle">Loading <i class="glyphicon glyphicon-cog gly-spin"></i></span>
+        </button>
+    </form>
 
     <hr>
 
@@ -87,5 +89,4 @@
             <h5>MA(200): {{stock.movingAverages.days200}}</h5>
         </div>
     </div>
-
-</form>
+</div>
