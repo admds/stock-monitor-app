@@ -77,15 +77,14 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
                         industry_category : arrayOfResults[0].data.industry_category,
                         industry_group : arrayOfResults[0].data.industry_group,
                         favorite: false,
-                        movingAverages : {
-                            days15 : -1,
-                            days50 : -1,
-                            days100 : -1,
-                            days200 : -1
-                        }
+                        movingAverages : {}
                     };
 
-                    $scope.calcMovingAverages(arrayOfResults[1].data.data, stockInfo);
+                    var allClosePrices = arrayOfResults[1].data.data.map(function (dataPoint) {return dataPoint.close;})
+                    $scope.calcMovingAverages(allClosePrices, stockInfo);
+
+                    // RSI is an array of values based on a 14-day interval. 
+                    var rsi = $scope.calcRSI(allClosePrices, stockInfo);
 
                     // Save volume per day over last 3 months (more data points are not needed)
                     var allVolume = arrayOfResults[1].data.data.map(function (dataPoint) {return dataPoint.volume;})
@@ -112,8 +111,7 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
     }
 
     // Display stock information and saves last 200 days of closing prices to cookie.
-    $scope.calcMovingAverages = function(arrOfDataPoints, stockInfo) {
-        var allClosePrices = arrOfDataPoints.map(function (dataPoint) {return dataPoint.close;})
+    $scope.calcMovingAverages = function(allClosePrices, stockInfo) {
         stockInfo.closePrices = allClosePrices.slice(0, 200);
 
         stockInfo.movingAverages.days15 = $scope.calcMovingAverage(allClosePrices, 15);
@@ -126,8 +124,71 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 
     $scope.calcMovingAverage = function(allClosePrices, numDays) {
         var closePrices = allClosePrices.slice(0, numDays);
-        var sum = closePrices.reduce(function(a, b) { return a + b; });
-        return (sum / numDays).toFixed(2);
+        return $scope.calcArrayAverage(closePrices);
+    };
+
+    // General calculate average in array.
+    $scope.calcArrayAverage = function(arr) {
+        var sum = arr.reduce(function(a, b) { return a + b; });
+        return (sum / arr.length).toFixed(2);
+    };
+
+    /** Definition RSI (Relative Strength Index)-
+    The relative strength index (RSI) is a momentum indicator, that compares
+    the magnitude of recent gains and losses over a specified time period to
+    measure speed and change of price movements of a security. It is primarily
+    used to attempt to identify overbought or oversold conditions in the
+    trading of an asset.
+
+    Overbought = RSI > 70
+    Oversold = RSI < 30
+    **/
+    $scope.calcRSI = function(allClosePrices, stockInfo) {
+        console.log("Calculating RSI...");
+
+        // Changes is the price difference, both plus and minus, between days.
+        var changes = new Array(allClosePrices.length - 1);
+        for (var index = 0; index < changes.length; index++) {
+            changes[index] = (allClosePrices[index] - allClosePrices[index + 1]).toFixed(2);
+        }
+
+        var gains = new Array(changes.length);
+        var losses = new Array(changes.length);
+
+        for (var index = 0; index < changes.length; index++) {
+            if (changes[index] <= 0) {
+                gains[index] = 0;
+                losses[index] = changes[index] * -1;
+            } else {
+                gains[index] = changes[index] * 1;
+                losses[index] = 0;
+            }
+        }
+
+        // Get average gains and average losses.
+        var avgGains = new Array(changes.length - 13);
+        var avgLosses = new Array(changes.length - 13);
+        for (var index = 0; index < avgGains.length; index++) {
+            avgGains[index] = $scope.calcArrayAverage(gains.slice(index, index + 14)) * 1;
+            avgLosses[index] = $scope.calcArrayAverage(losses.slice(index, index + 14)) * 1;
+        }
+
+        // Calculate RS = (Average gains over 14 days) / (Average losses over 14 days).
+        var rs = new Array(avgGains.length);
+        for (var index = 0; index < avgGains.length - 15; index++) {
+            rs[index] = avgGains[index] / avgLosses[index];
+        }
+
+        var rsi = new Array(rs.length);
+        for (var index = 0; index < rsi.length - 1; index++) {
+            if (avgLosses[index] < 0) {
+                rsi[index] = 100;
+            } else {
+                rsi[index] = 100 - (100 / (1 + rs[index]));
+            }
+        }
+
+        return rsi;
     };
 
     // Display stock information.
