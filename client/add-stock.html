@@ -8,22 +8,22 @@
 <div class="container-fluid" ng-controller="StockLookupCtrl" >
     <form ng-submit="submit()" role="search">
         <div uib-alert
-            class="alert"
-            dismiss-on-timeout="3000"
-            ng-repeat="alert in alerts"
-            close="closeAlert($index)"
-            ng-class="'alert-danger'">{{alert.msg}}
-        </div>
+        class="alert"
+        dismiss-on-timeout="3000"
+        ng-repeat="alert in alerts"
+        close="closeAlert($index)"
+        ng-class="'alert-danger'">{{alert.msg}}
+    </div>
 
-        <pre>Stock Lookup: {{selectedSymbol.ticker}} {{selectedSymbol.name}}</pre>
-        <div class="form-group">
-            <input type="text"
-            ng-model="selectedSymbol"
-            uib-typeahead="stockInfo as stockInfo.ticker for stockInfo in stockCompanies | filter:$viewValue | limitTo:20"
-            placeholder="ex: AMD, GE, MMP"
-            class="form-control"
-            typeahead-template-url="typeahead.html"/>
-        </div>
+    <pre>Stock Lookup: {{selectedSymbol.ticker}} {{selectedSymbol.name}}</pre>
+    <div class="form-group">
+        <input type="text"
+        ng-model="selectedSymbol"
+        uib-typeahead="stockInfo as stockInfo.ticker for stockInfo in stockCompanies | filter:$viewValue | limitTo:20"
+        placeholder="ex: AMD, GE, MMP"
+        class="form-control"
+        typeahead-template-url="typeahead.html"/>
+    </div>
 
         <button type="submit"
                 class="btn btn-primary"
@@ -33,7 +33,7 @@
         </button>
     </form>
 
-    <hr>
+<hr>
 
     <div >
         <!-- Sort dropdown -->
@@ -97,7 +97,7 @@
         </div>
     </div>
 
-    <hr>
+<hr>
 
     <!-- Watched Stocks -->
     <div uib-accordion close-others=true>
