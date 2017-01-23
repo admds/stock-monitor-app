@@ -25,68 +25,100 @@
             typeahead-template-url="typeahead.html"/>
         </div>
 
-        <button type="submit" class="btn btn-primary" ng-click="toggle = !toggle">
-            <span ng-show="toggle">Submit</span>
-            <span ng-hide="toggle">Loading <i class="glyphicon glyphicon-cog gly-spin"></i></span>
+        <button type="submit"
+                class="btn btn-primary"
+                ng-disabled="submitButtonDisabled"
+                >
+            Submit
         </button>
     </form>
 
     <hr>
 
     <div >
-        <select class="selectpicker show-tick" ng-model="orderStockBy" ng-change="sortStocks()">
-            <option value="ticker">Symbol</option>
-            <option value="name">Company Name</option>
-            <option value="price">Price</option>
-            <option value="sector">Sector</option>
-        </select>
+        <!-- Sort dropdown -->
+        <div class="btn-group" uib-dropdown is-open="status.isopen">
+            <button id="single-button" type="button" class="btn btn-default" uib-dropdown-toggle >
+                Sort By <span class="glyphicon glyphicon-chevron-down"></span>
+            </button>
+            <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
+                <li role="menuitem" >
+                    <a ng-click="sortStocks('symbol')">
+                        Symbol
+                        <i class="glyphicon glyphicon-ok" ng-hide="orderStocksBy !== 'symbol'"></i>
+                    </a>
+                </li>
+                <li role="menuitem">
+                    <a ng-click="sortStocks('name')">
+                        Company Name
+                        <i class="glyphicon glyphicon-ok" ng-hide="orderStocksBy !== 'name'"></i>
+                    </a>
+                </li>
+                <li role="menuitem">
+                    <a ng-click="sortStocks('price')">
+                        Current Price
+                        <i class="glyphicon glyphicon-ok" ng-hide="orderStocksBy !== 'price'">
+                        </i>
+                    </a>
+                </li>
+                <li role="menuitem">
+                    <a ng-click="sortStocks('sector')">Sector
+                        <i class="glyphicon glyphicon-ok" ng-hide="orderStocksBy !== 'sector'"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Reverse sorting button -->
         <button type="button" class="btn btn-default" ng-click="reverseStockSorting()">
             <span class="glyphicon glyphicon-sort"/>
         </button>
     </div>
 
     <!-- Favorite Stocks -->
-    <div uib-accordion close-others="oneAtATime">
-        <div uib-accordion-group class="panel-default" ng-repeat="stock in stocks | filter:{favorite:true} | orderBy:orderStockBy:reverseStockOrder">
+    <div uib-accordion close-others=true>
+        <div uib-accordion-group class="panel-default" ng-repeat="stockInfo in stocks | filter:{favorite:true} | orderBy:orderStocksBy:reverseStockOrder">
             <uib-accordion-heading>
-                {{stock.ticker}} - {{stock.name}}
-                <i class="favorite glyphicon glyphicon-heart" ng-click="favoriteStock(stock.ticker)"></i>
+                {{stockInfo.symbol}} - {{stockInfo.name}}
+                <i class="favorite glyphicon glyphicon-heart" ng-click="favoriteStock(stockInfo.symbol)"></i>
+                <i class="glyphicon glyphicon-cog gly-spin" ng-hide="!stockInfo.loading"></i>
                 <i class="pull-right glyphicon glyphicon-remove"
-                    ng-click="removeStock(stock.ticker)"></i>
+                    ng-click="removeStock(stockInfo.symbol)"></i>
             </uib-accordion-heading>
-            <h5>Sector: {{stock.sector}}</h5>
-            <h5>Industry Category: {{stock.industry_category}}</h5>
-            <h5>Industry Group: {{stock.industry_group}}</h5>
+            <h5>Sector: {{stockInfo.sector}}</h5>
+            <h5>Industry Category: {{stockInfo.industryCategory}}</h5>
+            <h5>Industry Group: {{stockInfo.industryGroup}}</h5>
             <br/>
             <a href="http://www.investopedia.com/university/movingaverage/movingaverages2.asp" target="_blank">Moving Averages</a>
-            <h5>MA(15): {{stock.movingAverages.days15}}</h5>
-            <h5>MA(50): {{stock.movingAverages.days50}}</h5>
-            <h5>MA(100): {{stock.movingAverages.days100}}</h5>
-            <h5>MA(200): {{stock.movingAverages.days200}}</h5>
+            <h5>MA(15): {{stockInfo.movingAverages.days15}}</h5>
+            <h5>MA(50): {{stockInfo.movingAverages.days50}}</h5>
+            <h5>MA(100): {{stockInfo.movingAverages.days100}}</h5>
+            <h5>MA(200): {{stockInfo.movingAverages.days200}}</h5>
         </div>
     </div>
 
     <hr>
 
     <!-- Watched Stocks -->
-    <div uib-accordion close-others="oneAtATime">
-        <div uib-accordion-group class="panel-default" ng-repeat="stock in stocks | filter:{favorite:false} | orderBy:orderStockBy:reverseStockOrder">
+    <div uib-accordion close-others=true>
+        <div uib-accordion-group class="panel-default" ng-repeat="stockInfo in stocks | filter:{favorite:false} | orderBy:orderStocksBy:reverseStockOrder">
             <uib-accordion-heading>
-                {{stock.ticker}} - {{stock.name}}
-                <i class="favorite glyphicon glyphicon-heart-empty" ng-click="favoriteStock(stock.ticker)"></i>
+                {{stockInfo.symbol}} - {{stockInfo.name}}
+                <i class="favorite glyphicon glyphicon-heart-empty" ng-click="favoriteStock(stockInfo.symbol)"></i>
+                <i class="glyphicon glyphicon-cog gly-spin" ng-hide="!stockInfo.loading"></i>
                 <i class="pull-right glyphicon glyphicon-remove"
-                    ng-click="removeStock(stock.ticker)"></i>
+                    ng-click="removeStock(stockInfo.symbol)"></i>
             </uib-accordion-heading>
 
-            <h5>Sector: {{stock.sector}}</h5>
-            <h5>Industry Category: {{stock.industry_category}}</h5>
-            <h5>Industry Group: {{stock.industry_group}}</h5>
+            <h5>Sector: {{stockInfo.sector}}</h5>
+            <h5>Industry Category: {{stockInfo.industryCategory}}</h5>
+            <h5>Industry Group: {{stockInfo.industryGroup}}</h5>
             <br/>
             <a href="http://www.investopedia.com/university/movingaverage/movingaverages2.asp" target="_blank">Moving Averages</a>
-            <h5>MA(15): {{stock.movingAverages.days15}}</h5>
-            <h5>MA(50): {{stock.movingAverages.days50}}</h5>
-            <h5>MA(100): {{stock.movingAverages.days100}}</h5>
-            <h5>MA(200): {{stock.movingAverages.days200}}</h5>
+            <h5>MA(15): {{stockInfo.movingAverages.days15}}</h5>
+            <h5>MA(50): {{stockInfo.movingAverages.days50}}</h5>
+            <h5>MA(100): {{stockInfo.movingAverages.days100}}</h5>
+            <h5>MA(200): {{stockInfo.movingAverages.days200}}</h5>
         </div>
     </div>
 </div>

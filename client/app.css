@@ -1,3 +1,7 @@
+li {
+    cursor: pointer;
+}
+
 div.panel-default.ng-scope.ng-isolate-scope.panel {
     margin: 5px 5px 5px 5px;
 }
@@ -15,7 +19,6 @@ div.panel-default.ng-scope.ng-isolate-scope.panel.panel-open > div.panel-heading
     margin: 5px;
     width: 50%;
 }
-
 
 .btn {
     margin: 5px 5px 5px 5px;

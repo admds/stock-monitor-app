@@ -10,17 +10,30 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 }])
 
 .controller('StockLookupCtrl', function($scope, $http, $cookies, $q) {
-    $scope.oneAtATime = true;
     $scope.alerts = [];
     $scope.stocks = [];
-    $scope.orderStockBy = 'ticker';
+    $scope.stockCompanies = [];
+    $scope.orderStocksBy = 'symbol';
     $scope.reverseStockOrder = false;
-
     $scope.selectedSymbol = undefined;
+    $scope.submitButtonDisabled = true;
+
+    $scope.$watch('selectedSymbol', function() {
+        var stockSymbols = $scope.stocks.map(function(stockInfo) {
+            return stockInfo.symbol;
+        });
+        if ($scope.selectedSymbol && $scope.selectedSymbol.ticker && stockSymbols.indexOf($scope.selectedSymbol.ticker) === -1 ) {
+            $scope.submitButtonDisabled = false;
+        }
+        else {
+            $scope.submitButtonDisabled = true;
+        }
+    });
 
     $scope.initialize = function() {
-        $scope.stockCompanies = [];
         $scope.toggle = true;
+        $scope.toggleLoadingInformation = true;
+        $scope.toggleLoadingPrice = true;
         $scope.loadStockCompanies();
 
         // If there are no displayed stocks, check cookies to display
@@ -43,72 +56,83 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 
         for(var property in cookies) {
             if (property.indexOf('stock.') === 0) {
-                $scope.displayStockInfo(JSON.parse(cookies[property]), true);
+                $scope.stocks.push(JSON.parse(cookies[property]));
             }
         }
     };
 
-    //TODO: Add validation for invalid ticker symbols
     $scope.submit = function() {
-
-        // Check if symbol was indeed entered into the field.
+        // Check if symbol has been selected.
         if ($scope.selectedSymbol && $scope.selectedSymbol.ticker) {
-            // Check if already watching entered symbol.
-            var cookieExists = $cookies.get("stock." + $scope.selectedSymbol.ticker.toUpperCase());
+            // Check if we are already watching the selected symbol.
+            var cookieExists = $cookies.get($scope.getStockKey($scope.selectedSymbol.ticker));
 
             // If not watching - make the GET call to retrieve stock information.
             if (!cookieExists) {
+                // Go ahead and display the basic stock information (name and symbol).
+                var stockInfo = {
+                    symbol : $scope.selectedSymbol.ticker,
+                    name : $scope.selectedSymbol.name,
+                    sector : '',
+                    industry_category : '',
+                    industry_group : '',
+                    favorite: false,
+                    loading: true,
+                    movingAverages : {}
+                };
+                $scope.addOrUpdateStock(stockInfo);
 
+                // Load the rest of the stock information
                 var informationCall = $http.get('/information', {
                     params: {
-                        symbol: $scope.selectedSymbol.ticker
+                        symbol: stockInfo.symbol
                     }
-                });
-                var pricesCall = $http.get('/prices', {
-                    params: {
-                        symbol: $scope.selectedSymbol.ticker
-                    }
-                });
-                $q.all([informationCall, pricesCall]).then(function(arrayOfResults) {
-                    var stockInfo = {
-                        ticker : arrayOfResults[0].data.ticker,
-                        name : arrayOfResults[0].data.name,
-                        sector : arrayOfResults[0].data.sector,
-                        industry_category : arrayOfResults[0].data.industry_category,
-                        industry_group : arrayOfResults[0].data.industry_group,
-                        favorite: false,
-                        movingAverages : {}
-                    };
+                }).then(function(informationResponse) {
+                    // Set the information that we just loaded.
+                    stockInfo.sector = informationResponse.data.sector;
+                    stockInfo.industryCategory = informationResponse.data.industry_category;
+                    stockInfo.industryGroup = informationResponse.data.industry_group;
 
-                    var allClosePrices = arrayOfResults[1].data.data.map(function (dataPoint) {return dataPoint.close;})
-                    $scope.calcMovingAverages(allClosePrices, stockInfo);
+                    $scope.addOrUpdateStock(stockInfo);
+                    var pricesCall = $http.get('/prices', {
+                        params: {
+                            symbol: stockInfo.symbol
+                        }
+                    }).then(function(pricesResponse) {
+                        var allClosePrices = pricesResponse.data.data.map(function (dataPoint) {return dataPoint.close;})
+                        $scope.calcMovingAverages(allClosePrices, stockInfo);
 
-                    // RSI is an array of values based on a 14-day interval. 
-                    var rsi = $scope.calcRSI(allClosePrices, stockInfo);
+                        // RSI is an array of values based on a 14-day interval.
+                        var rsi = $scope.calcRSI(allClosePrices, stockInfo);
 
-                    // Save volume per day over last 3 months (more data points are not needed)
-                    var allVolume = arrayOfResults[1].data.data.map(function (dataPoint) {return dataPoint.volume;})
-                    stockInfo.volume = allVolume.slice(0, 90);
-
-                    console.log(stockInfo);
-                    $scope.displayStockInfo(stockInfo, false);
-                    $scope.toggle = true;
+                        // Save volume per day over last 3 months (more data points are not needed)
+                        var allVolume = pricesResponse.data.data.map(function (dataPoint) {return dataPoint.volume;})
+                        stockInfo.volume = allVolume.slice(0, 90);
+                        stockInfo.loading = false;
+                        $scope.addOrUpdateStock(stockInfo);
+                        $scope.toggle = true;
+                    });
                 });
             }
             else {
                 $scope.toggle = true;
-                $scope.alerts.push({msg: 'Already watching: ' + $scope.selectedSymbol.ticker.toUpperCase()});
+                $scope.alerts.push({msg: 'Already watching ' + $scope.selectedSymbol.ticker});
             }
         }
         else {
             $scope.toggle = true;
-            $scope.alerts.push({msg: 'Please enter ticker symbol.'});
+            $scope.alerts.push({msg: 'Please enter a stock symbol.'});
         }
+    };
+
+    $scope.sortStocks = function(orderByValue) {
+        console.log($scope.orderStocksBy);
+        $scope.orderStocksBy = orderByValue;
     };
 
     $scope.reverseStockSorting = function() {
         $scope.reverseStockOrder = !$scope.reverseStockOrder;
-    }
+    };
 
     // Display stock information and saves last 200 days of closing prices to cookie.
     $scope.calcMovingAverages = function(allClosePrices, stockInfo) {
@@ -191,13 +215,25 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
         return rsi;
     };
 
-    // Display stock information.
-    $scope.displayStockInfo = function(stockInfo, isLoading) {
-        if (!isLoading) {
-            $cookies.put('stock.' + stockInfo.ticker, JSON.stringify(stockInfo));
+    // Adds a stock to the watched list and updates the cookie for that stock.
+    $scope.addOrUpdateStock = function(stockInfo) {
+        var key = $scope.getStockKey(stockInfo.symbol);
+        var cookieExists = $cookies.get(key);
+        if (cookieExists) {
+            // The stock already exists, remove the old information in case there is new information.
+            $cookies.remove(key);
+        }
+        else {
+            // The stock doesn't exist add it  to watched stockes.
+            $scope.stocks.push(stockInfo);
         }
 
-        $scope.stocks.push(stockInfo);
+        // Update the cached stock information.
+        $cookies.put(key, JSON.stringify(stockInfo));
+    };
+
+    $scope.getStockKey = function(symbol) {
+        return 'stock.' + symbol;
     };
 
     $scope.closeAlert = function(index) {
@@ -206,30 +242,31 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 
     $scope.favoriteStock = function(symbol) {
         var stockInfo = $scope.stocks.filter(function(stock) {
-            return stock.ticker === symbol;
+            return stock.symbol === symbol;
         })[0];
 
         if (stockInfo.favorite) {
-            console.log('Unfavoriting %s stock.', stockInfo.ticker);
+            console.log('Unfavoriting %s stock.', stockInfo.symbol);
         }
         else {
-            console.log('Favoriting %s stock.', stockInfo.ticker );
+            console.log('Favoriting %s stock.', stockInfo.symbol );
         }
 
         stockInfo.favorite = !stockInfo.favorite;
 
         // Re-add the stock information to the cookie with the updated favorite value.
-        $cookies.remove('stock.' + stockInfo.ticker);
-        $cookies.put('stock.' + stockInfo.ticker, JSON.stringify(stockInfo));
+        var key = $scope.getStockKey(stockInfo.symbol)
+        $cookies.remove(key);
+        $cookies.put(key, JSON.stringify(stockInfo));
     };
 
     // Removes view of WATCHED and deletes cookie.
     $scope.removeStock = function(symbol) {
         console.log('Removing %s from watched stocks.', symbol);
 
-        $cookies.remove('stock.' + symbol);
+        $cookies.remove($scope.getStockKey(symbol));
         var index = $scope.stocks.map(function(stock) {
-            return stock.ticker;
+            return stock.symbol;
         }).indexOf(symbol);
         $scope.stocks.splice(index, 1);
     };
