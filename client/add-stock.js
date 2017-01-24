@@ -136,10 +136,10 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 
     // Display stock information and saves last 200 days of closing prices to cookie.
     $scope.calcMovingAverages = function(allClosePrices, stockInfo) {
-        stockInfo.movingAverages.days15 = $scope.reverseArray($scope.calcMovingAverage(allClosePrices, 15));
-        stockInfo.movingAverages.days50 = $scope.reverseArray($scope.calcMovingAverage(allClosePrices, 50));
-        stockInfo.movingAverages.days100 = $scope.reverseArray($scope.calcMovingAverage(allClosePrices, 100));
-        stockInfo.movingAverages.days200 = $scope.reverseArray($scope.calcMovingAverage(allClosePrices, 200));
+        stockInfo.movingAverages.days15 = $scope.calcMovingAverage(allClosePrices, 15);
+        stockInfo.movingAverages.days50 = $scope.calcMovingAverage(allClosePrices, 50);
+        stockInfo.movingAverages.days100 = $scope.calcMovingAverage(allClosePrices, 100);
+        stockInfo.movingAverages.days200 = $scope.calcMovingAverage(allClosePrices, 200);
 
         stockInfo.closePrices = $scope.reverseArray(allClosePrices.slice(0, 200));
 
