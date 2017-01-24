@@ -79,7 +79,7 @@
     <div uib-accordion close-others=true>
         <div uib-accordion-group class="panel-default" ng-repeat="stockInfo in stocks | filter:{favorite:true} | orderBy:orderStocksBy:reverseStockOrder">
             <uib-accordion-heading>
-                {{stockInfo.symbol}} - {{stockInfo.name}}
+                <a ng-click="selectStock(stockInfo)">{{stockInfo.symbol}} - {{stockInfo.name}}</a>
                 <i class="favorite glyphicon glyphicon-heart" ng-click="favoriteStock(stockInfo.symbol)"></i>
                 <i class="glyphicon glyphicon-cog gly-spin" ng-hide="!stockInfo.loading"></i>
                 <i class="pull-right glyphicon glyphicon-remove"
@@ -101,24 +101,30 @@
 
     <!-- Watched Stocks -->
     <div uib-accordion close-others=true>
-        <div uib-accordion-group class="panel-default" ng-repeat="stockInfo in stocks | filter:{favorite:false} | orderBy:orderStocksBy:reverseStockOrder">
-            <uib-accordion-heading>
-                {{stockInfo.symbol}} - {{stockInfo.name}}
-                <i class="favorite glyphicon glyphicon-heart-empty" ng-click="favoriteStock(stockInfo.symbol)"></i>
-                <i class="glyphicon glyphicon-cog gly-spin" ng-hide="!stockInfo.loading"></i>
-                <i class="pull-right glyphicon glyphicon-remove"
-                    ng-click="removeStock(stockInfo.symbol)"></i>
-            </uib-accordion-heading>
+        <div ng-repeat="stockInfo in stocks | filter:{favorite:false} | orderBy:orderStocksBy:reverseStockOrder">
+            <div uib-accordion-group
+                    class="panel-default">
+                <uib-accordion-heading>
+                    <a ng-click="selectStock(stockInfo)">{{stockInfo.symbol}} - {{stockInfo.name}}</a>
+                    <i class="favorite glyphicon glyphicon-heart-empty" ng-click="favoriteStock(stockInfo.symbol)"></i>
+                    <i class="glyphicon glyphicon-cog gly-spin" ng-hide="!stockInfo.loading"></i>
+                    <i class="pull-right glyphicon glyphicon-remove"
+                        ng-click="removeStock(stockInfo.symbol)"></i>
+                </uib-accordion-heading>
 
-            <h5>Sector: {{stockInfo.sector}}</h5>
-            <h5>Industry Category: {{stockInfo.industryCategory}}</h5>
-            <h5>Industry Group: {{stockInfo.industryGroup}}</h5>
-            <br/>
-            <a href="http://www.investopedia.com/university/movingaverage/movingaverages2.asp" target="_blank">Moving Averages</a>
-            <h5>MA(15): {{stockInfo.movingAverages.days15}}</h5>
-            <h5>MA(50): {{stockInfo.movingAverages.days50}}</h5>
-            <h5>MA(100): {{stockInfo.movingAverages.days100}}</h5>
-            <h5>MA(200): {{stockInfo.movingAverages.days200}}</h5>
+                <h5>Sector: {{stockInfo.sector}}</h5>
+                <h5>Industry Category: {{stockInfo.industryCategory}}</h5>
+                <h5>Industry Group: {{stockInfo.industryGroup}}</h5>
+                <br/>
+                <a href="http://www.investopedia.com/university/movingaverage/movingaverages2.asp" target="_blank">Moving Averages</a>
+                <h5>MA(15): {{stockInfo.movingAverages.days15}}</h5>
+                <h5>MA(50): {{stockInfo.movingAverages.days50}}</h5>
+                <h5>MA(100): {{stockInfo.movingAverages.days100}}</h5>
+                <h5>MA(200): {{stockInfo.movingAverages.days200}}</h5>
+            </div>
         </div>
     </div>
+</div>
+<div>
+    <div id="container"></div>
 </div>

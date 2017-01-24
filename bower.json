@@ -20,7 +20,6 @@
     "angular-loader": "^1.6.1",
     "angular-cookies": "^1.6.1",
     "angular-bootstrap": "^2.4.0",
-    "bootstrap-select": "^1.12.1",
-    "highcharts-ng": "^1.0.0"
+    "bootstrap-select": "^1.12.1"
   }
 }

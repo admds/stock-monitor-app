@@ -9,31 +9,20 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
     });
 }])
 
-.controller('StockLookupCtrl', function($scope, $http, $cookies, $q) {
+.controller('StockLookupCtrl', function($scope, $http, $cookies) {
     $scope.alerts = [];
     $scope.stocks = [];
     $scope.stockCompanies = [];
     $scope.orderStocksBy = 'symbol';
     $scope.reverseStockOrder = false;
     $scope.selectedSymbol = undefined;
+    $scope.selectedStock = undefined;
     $scope.submitButtonDisabled = true;
 
-    $scope.$watch('selectedSymbol', function() {
-        var stockSymbols = $scope.stocks.map(function(stockInfo) {
-            return stockInfo.symbol;
-        });
-        if ($scope.selectedSymbol && $scope.selectedSymbol.ticker && stockSymbols.indexOf($scope.selectedSymbol.ticker) === -1 ) {
-            $scope.submitButtonDisabled = false;
-        }
-        else {
-            $scope.submitButtonDisabled = true;
-        }
-    });
 
     $scope.initialize = function() {
-        $scope.toggle = true;
-        $scope.toggleLoadingInformation = true;
-        $scope.toggleLoadingPrice = true;
+        $scope.addSelectedSymbolWatcher();
+
         $scope.loadStockCompanies();
 
         // If there are no displayed stocks, check cookies to display
@@ -56,7 +45,8 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 
         for(var property in cookies) {
             if (property.indexOf('stock.') === 0) {
-                $scope.stocks.push(JSON.parse(cookies[property]));
+                var stockInfo = JSON.parse(cookies[property]);
+                $scope.stocks.push(stockInfo);
             }
         }
     };
@@ -80,6 +70,7 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
                     loading: true,
                     movingAverages : {}
                 };
+
                 $scope.addOrUpdateStock(stockInfo);
 
                 // Load the rest of the stock information
@@ -124,6 +115,33 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
             $scope.alerts.push({msg: 'Please enter a stock symbol.'});
         }
     };
+
+    $scope.createChart = function() {
+        if (!$scope.selectedStock) {
+            return;
+        }
+
+        console.log('Creating a chart for ', $scope.selectStock.symbol);
+
+        // Create the chart
+        Highcharts.stockChart('container', {
+            rangeSelector: {
+                selected: 1
+            },
+
+            title: {
+                text: $scope.selectedStock.symbol + ' - ' + $scope.selectedStock.name + ' Stock Price'
+            },
+
+            series: [{
+                name: $scope.selectedStock.symbol,
+                data: $scope.selectedStock.volume,
+                tooltip: {
+                    valueDecimals: 2
+                }
+            }]
+        });
+    }
 
     $scope.sortStocks = function(orderByValue) {
         console.log($scope.orderStocksBy);
@@ -230,6 +248,25 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 
         // Update the cached stock information.
         $cookies.put(key, JSON.stringify(stockInfo));
+    };
+
+    $scope.addSelectedSymbolWatcher = function() {
+        $scope.$watch('selectedSymbol', function() {
+            var stockSymbols = $scope.stocks.map(function(stockInfo) {
+                return stockInfo.symbol;
+            });
+            if ($scope.selectedSymbol && $scope.selectedSymbol.ticker && stockSymbols.indexOf($scope.selectedSymbol.ticker) === -1 ) {
+                $scope.submitButtonDisabled = false;
+            }
+            else {
+                $scope.submitButtonDisabled = true;
+            }
+        });
+    };
+
+    $scope.selectStock = function(stockInfo) {
+        $scope.selectedStock = stockInfo;
+        $scope.createChart();
     };
 
     $scope.getStockKey = function(symbol) {
