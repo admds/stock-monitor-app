@@ -13,27 +13,32 @@
         ng-repeat="alert in alerts"
         close="closeAlert($index)"
         ng-class="'alert-danger'">{{alert.msg}}
-    </div>
+        </div>
 
-    <pre>Stock Lookup: {{selectedSymbol.ticker}} {{selectedSymbol.name}}</pre>
-    <div class="form-group">
-        <input type="text"
-        ng-model="selectedSymbol"
-        uib-typeahead="stockInfo as stockInfo.ticker for stockInfo in stockCompanies | filter:$viewValue | limitTo:20"
-        placeholder="ex: AMD, GE, MMP"
-        class="form-control"
-        typeahead-template-url="typeahead.html"/>
-    </div>
+        <div class="col-sm-10">
+            <input type="text" readonly="readonly" class="form-control" value="Stock Lookup: {{selectedSymbol.ticker}} {{selectedSymbol.name}}">
+        </div>
 
-        <button type="submit"
-                class="btn btn-primary"
-                ng-disabled="submitButtonDisabled"
-                >
+        <div class="form-group col-sm-10">
+            <input type="text"
+            ng-model="selectedSymbol"
+            uib-typeahead="stockInfo as stockInfo.ticker for stockInfo in stockCompanies | filter:$viewValue | limitTo:20"
+            placeholder="Stock Symbol"
+            class="form-control"
+            typeahead-template-url="typeahead.html"/>
+        </div>
+
+        <div class="col-sm-10">
+            <button type="submit"
+            class="btn btn-primary"
+            ng-disabled="submitButtonDisabled"
+            >
             Submit
-        </button>
+            </button>
+        </div>
     </form>
 
-<hr>
+    <hr>
 
     <div >
         <!-- Sort dropdown -->
@@ -97,13 +102,13 @@
         </div>
     </div>
 
-<hr>
+    <hr>
 
     <!-- Watched Stocks -->
     <div uib-accordion close-others=true>
         <div ng-repeat="stockInfo in stocks | filter:{favorite:false} | orderBy:orderStocksBy:reverseStockOrder">
             <div uib-accordion-group
-                    class="panel-default">
+                class="panel-default">
                 <uib-accordion-heading>
                     <a ng-click="selectStock(stockInfo)">{{stockInfo.symbol}} - {{stockInfo.name}}</a>
                     <i class="favorite glyphicon glyphicon-heart-empty" ng-click="favoriteStock(stockInfo.symbol)"></i>
