@@ -29,6 +29,7 @@
     padding: 8px 14px;
     margin-top: -15px;
     margin-bottom: 5px;
+    margin-right: 10px;
 }
 
 .btn-primary {
@@ -44,6 +45,18 @@
     background-color: #5A7196;
 }
 
+.btn-primary.btn-trans {
+    color: #556b8d;
+    background-color: transparent;
+    border: solid thin #556b8d;
+}
+
+.dropdown-menu {
+    border-radius: 2px;
+    box-shadow: none;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
 .panel-default > .panel-heading {
     border-color: #eff2f7;
     background: #fff;
@@ -56,11 +69,53 @@
     padding: 14px 10px;
 }
 
+.panel {
+    border: none;
+    margin-bottom: 20px;
+    background-color: #fff;
+}
+
+.panel-heading > .panel-title {
+    font-size: 0.813em;
+    font-weight: bold;
+}
+
+p {
+    font-size: 0.875em;
+}
+
+a, a:link, a:visited {
+    text-decoration: none;
+    outline: none;
+    color: #2e2e32;
+}
+
+a:hover {
+    color: #999999;
+    text-decoration: none;
+}
+
+.btn-group {
+    margin-bottom: 15px;
+    margin-top: 15px;
+}
+
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    font-weight: 500px;
+    line-height: 1.1;
+}
+
 body {
     background-color: #F6F8F8;
     color: #565656;
     font-family: "Open Sans", Helvetica, Arial, sans-serif;
 }
+
+/*div.panel-default.ng-scope.ng-isolate-scope.panel.panel-open > div.panel-heading {
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #2e6da4;
+}*/
 
 li {
     cursor: pointer;
@@ -68,12 +123,6 @@ li {
 
 div.panel-default.ng-scope.ng-isolate-scope.panel {
     margin: 5px 5px 5px 5px;
-}
-
-div.panel-default.ng-scope.ng-isolate-scope.panel.panel-open > div.panel-heading {
-    color: #fff;
-    background-color: #337ab7;
-    border-color: #2e6da4;
 }
 
 .alert-danger {

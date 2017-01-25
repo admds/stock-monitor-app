@@ -6,7 +6,46 @@
 </script>
 
 <div class="container-fluid" ng-controller="StockLookupCtrl" >
-    <div class="panel panel-default">
+ <div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Search</h3>
+    </div>
+    <div class=panel-body>
+        <form ng-submit="submit()" role="search">
+            <div uib-alert
+            class="alert"
+            dismiss-on-timeout="3000"
+            ng-repeat="alert in alerts"
+            close="closeAlert($index)"
+            ng-class="'alert-danger'">{{alert.msg}}
+            </div>
+
+            <div class="col-sm-10">
+                <input type="text" readonly="readonly" class="form-control" value="Stock Lookup: {{selectedSymbol.ticker}} {{selectedSymbol.name}}">
+            </div>
+
+            <div class="form-group col-sm-10">
+                <input type="text"
+                ng-model="selectedSymbol"
+                uib-typeahead="stockInfo as stockInfo.ticker for stockInfo in stockCompanies | filter:$viewValue | limitTo:20"
+                placeholder="Stock Symbol"
+                class="form-control"
+                typeahead-template-url="typeahead.html"/>
+            </div>
+
+            <div class="col-sm-10">
+                <button type="submit"
+                class="btn btn-primary"
+                ng-disabled="submitButtonDisabled">
+                Submit
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+    <!-- <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">Search</h3>
         </div>
@@ -36,19 +75,22 @@
                 <div class="col-sm-10">
                     <button type="submit"
                     class="btn btn-primary"
-                    ng-disabled="submitButtonDisabled"
-                    >
+                    ng-disabled="submitButtonDisabled">
                     Submit
                     </button>
                 </div>
             </form>
         </div>
-    <hr>
-
-    <div >
+    </div>-->
+<div class="panel panel-default">
+<div class="panel-heading">
+    <h3 class="panel-title">Watch List</h3>
+</div>
+<div class="panel-body">
+    <div>
         <!-- Sort dropdown -->
         <div class="btn-group" uib-dropdown is-open="status.isopen">
-            <button id="single-button" type="button" class="btn btn-default" uib-dropdown-toggle >
+            <button id="single-button" type="button" class="btn btn-default btn-primary btn-trans" uib-dropdown-toggle >
                 Sort By <span class="glyphicon glyphicon-chevron-down"></span>
             </button>
             <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
@@ -80,7 +122,7 @@
         </div>
 
         <!-- Reverse sorting button -->
-        <button type="button" class="btn btn-default" ng-click="reverseStockSorting()">
+        <button type="button" class="btn btn-default btn-primary btn-trans" ng-click="reverseStockSorting()">
             <span class="glyphicon glyphicon-sort"/>
         </button>
     </div>
@@ -95,25 +137,25 @@
                 <i class="pull-right glyphicon glyphicon-remove"
                     ng-click="removeStock(stockInfo.symbol)"></i>
             </uib-accordion-heading>
-            <h5>Sector: {{stockInfo.sector}}</h5>
-            <h5>Industry Category: {{stockInfo.industryCategory}}</h5>
-            <h5>Industry Group: {{stockInfo.industryGroup}}</h5>
+            <p>Sector: {{stockInfo.sector}}</p>
+            <p>Industry Category: {{stockInfo.industryCategory}}</p>
+            <p>Industry Group: {{stockInfo.industryGroup}}</p>
             <br/>
-            <a href="http://www.investopedia.com/university/movingaverage/movingaverages2.asp" target="_blank">Moving Averages</a>
-            <h5>MA(15): {{stockInfo.movingAverages.days15}}</h5>
-            <h5>MA(50): {{stockInfo.movingAverages.days50}}</h5>
-            <h5>MA(100): {{stockInfo.movingAverages.days100}}</h5>
-            <h5>MA(200): {{stockInfo.movingAverages.days200}}</h5>
+            <p><a href="http://www.investopedia.com/university/movingaverage/movingaverages2.asp" target="_blank">Moving Averages</a><p>
+            <p>MA(15): {{stockInfo.movingAverages.days15}}</p>
+            <p>MA(50): {{stockInfo.movingAverages.days50}}</p>
+            <p>MA(100): {{stockInfo.movingAverages.days100}}</p>
+            <p>MA(200): {{stockInfo.movingAverages.days200}}</p>
         </div>
     </div>
 
-    <hr>
+        <hr>
 
     <!-- Watched Stocks -->
     <div uib-accordion close-others=true>
         <div ng-repeat="stockInfo in stocks | filter:{favorite:false} | orderBy:orderStocksBy:reverseStockOrder">
             <div uib-accordion-group
-                class="panel-default">
+                class="panel panel-default">
                 <uib-accordion-heading>
                     <a ng-click="selectStock(stockInfo)">{{stockInfo.symbol}} - {{stockInfo.name}}</a>
                     <i class="favorite glyphicon glyphicon-heart-empty" ng-click="favoriteStock(stockInfo.symbol)"></i>
@@ -122,18 +164,20 @@
                         ng-click="removeStock(stockInfo.symbol)"></i>
                 </uib-accordion-heading>
 
-                <h5>Sector: {{stockInfo.sector}}</h5>
-                <h5>Industry Category: {{stockInfo.industryCategory}}</h5>
-                <h5>Industry Group: {{stockInfo.industryGroup}}</h5>
+                <p>Sector: {{stockInfo.sector}}</p>
+                <p>Industry Category: {{stockInfo.industryCategory}}</p>
+                <p>Industry Group: {{stockInfo.industryGroup}}</p>
                 <br/>
-                <a href="http://www.investopedia.com/university/movingaverage/movingaverages2.asp" target="_blank">Moving Averages</a>
-                <h5>MA(15): {{stockInfo.movingAverages.days15}}</h5>
-                <h5>MA(50): {{stockInfo.movingAverages.days50}}</h5>
-                <h5>MA(100): {{stockInfo.movingAverages.days100}}</h5>
-                <h5>MA(200): {{stockInfo.movingAverages.days200}}</h5>
+                <p><a href="http://www.investopedia.com/university/movingaverage/movingaverages2.asp" target="_blank">Moving Averages</a><p>
+                <p>MA(15): {{stockInfo.movingAverages.days15}}</p>
+                <p>MA(50): {{stockInfo.movingAverages.days50}}</p>
+                <p>MA(100): {{stockInfo.movingAverages.days100}}</p>
+                <p>MA(200): {{stockInfo.movingAverages.days200}}</p>
             </div>
         </div>
     </div>
+</div>
+</div>
 </div>
 <div>
     <div id="container"></div>
