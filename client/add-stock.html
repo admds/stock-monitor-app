@@ -6,38 +6,43 @@
 </script>
 
 <div class="container-fluid" ng-controller="StockLookupCtrl" >
-    <form ng-submit="submit()" role="search">
-        <div uib-alert
-        class="alert"
-        dismiss-on-timeout="3000"
-        ng-repeat="alert in alerts"
-        close="closeAlert($index)"
-        ng-class="'alert-danger'">{{alert.msg}}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Search</h3>
         </div>
+        <div>
+            <form ng-submit="submit()" role="search">
+                <div uib-alert
+                class="alert"
+                dismiss-on-timeout="3000"
+                ng-repeat="alert in alerts"
+                close="closeAlert($index)"
+                ng-class="'alert-danger'">{{alert.msg}}
+                </div>
 
-        <div class="col-sm-10">
-            <input type="text" readonly="readonly" class="form-control" value="Stock Lookup: {{selectedSymbol.ticker}} {{selectedSymbol.name}}">
+                <div class="col-sm-10">
+                    <input type="text" readonly="readonly" class="form-control" value="Stock Lookup: {{selectedSymbol.ticker}} {{selectedSymbol.name}}">
+                </div>
+
+                <div class="form-group col-sm-10">
+                    <input type="text"
+                    ng-model="selectedSymbol"
+                    uib-typeahead="stockInfo as stockInfo.ticker for stockInfo in stockCompanies | filter:$viewValue | limitTo:20"
+                    placeholder="Stock Symbol"
+                    class="form-control"
+                    typeahead-template-url="typeahead.html"/>
+                </div>
+
+                <div class="col-sm-10">
+                    <button type="submit"
+                    class="btn btn-primary"
+                    ng-disabled="submitButtonDisabled"
+                    >
+                    Submit
+                    </button>
+                </div>
+            </form>
         </div>
-
-        <div class="form-group col-sm-10">
-            <input type="text"
-            ng-model="selectedSymbol"
-            uib-typeahead="stockInfo as stockInfo.ticker for stockInfo in stockCompanies | filter:$viewValue | limitTo:20"
-            placeholder="Stock Symbol"
-            class="form-control"
-            typeahead-template-url="typeahead.html"/>
-        </div>
-
-        <div class="col-sm-10">
-            <button type="submit"
-            class="btn btn-primary"
-            ng-disabled="submitButtonDisabled"
-            >
-            Submit
-            </button>
-        </div>
-    </form>
-
     <hr>
 
     <div >

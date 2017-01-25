@@ -44,6 +44,18 @@
     background-color: #5A7196;
 }
 
+.panel-default > .panel-heading {
+    border-color: #eff2f7;
+    background: #fff;
+    color: #767676;
+}
+
+.panel > .panel-heading {
+    font-weight: 400;
+    text-transform: uppercase;
+    padding: 14px 10px;
+}
+
 body {
     background-color: #F6F8F8;
     color: #565656;
