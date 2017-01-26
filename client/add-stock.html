@@ -4,8 +4,9 @@
         - {{match.model.name}}
     </a>
 </script>
-
 <div class="container-fluid" ng-controller="StockLookupCtrl" >
+    <div class="row">
+<div class="col-md-6">
  <div class="panel panel-default">
     <div class="panel-heading">
         <h3 class="panel-title">Search</h3>
@@ -42,6 +43,67 @@
             </div>
         </form>
     </div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-solid-success widget-mini">
+            <div class="panel-body">
+                <i class="icon-bar-chart"></i>
+                <span class="total text-center">Close Price</span>
+                <span class="title text-center">$XXX</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="panel widget-mini">
+            <div class="panel-body">
+                <i class="icon-bar-chart"></i>
+                <span class="total text-center">P/E Ratio</span>
+                <span class="title text-center">XXX</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel widget-mini">
+            <div class="panel-body">
+                <i class="icon-bar-chart"></i>
+                <span class="total text-center">52 Week Stats</span>
+                <span class="title text-center">High: $XXX</span>
+                <span class="title text-center">Low: $XXX</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="panel panel-solid-info widget-mini">
+            <div class="panel-body">
+                <i class="icon-bar-chart"></i>
+                <span class="total text-center">Moving Averages</span>
+                <div class="row">
+                    <div class="col-md-6">
+                        <span class="title text-left">MA(15): $XXX</span>
+                    </div>
+                    <div class="col-md-6">
+                        <span class="title text-right">MA(100): $XXX</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <span class="title text-left">MA(50): $XXX</span>
+                    </div>
+                    <div class="col-md-6">
+                        <span class="title text-right">MA(200): $XXX</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
 </div>
 
 
@@ -82,6 +144,9 @@
             </form>
         </div>
     </div>-->
+    <div class="row">
+    <div class="col-md-6">
+
 <div class="panel panel-default">
 <div class="panel-heading">
     <h3 class="panel-title">Watch List</h3>
@@ -179,6 +244,21 @@
 </div>
 </div>
 </div>
-<div>
-    <div id="container"></div>
+<div class=col-md-6>
+    <div class="panel panel-default">
+        <div id="container"></div>
+    </div>
+</div>
+<div class="col-md-6">
+ <div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">News</h3>
+    </div>
+    <div class=panel-body>
+        Placeholder for News
+    </div>
+</div>
+</div>
+
+</div>
 </div>

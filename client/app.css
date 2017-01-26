@@ -111,6 +111,29 @@ body {
     font-family: "Open Sans", Helvetica, Arial, sans-serif;
 }
 
+.panel-solid-success > .panel-body, .panel-solid-success > .panel-footer, .panel-solid-success > .panel-heading {
+    background: #27b6af;
+    color: #fff;
+    border: none;
+}
+
+.panel-solid-info > .panel-body, .panel-solid-info > .panel-footer, .panel-solid-info > .panel-heading {
+    background: #1f7bb6;
+    color: #fff;
+    border: none;
+}
+
+.widget-mini .total {
+    font-size: 2em;
+    display: block;
+    font-weight: 300;
+}
+
+.widget-mini .title {
+    font-size: 1em;
+    display: block;
+}
+
 /*div.panel-default.ng-scope.ng-isolate-scope.panel.panel-open > div.panel-heading {
     color: #fff;
     background-color: #337ab7;
