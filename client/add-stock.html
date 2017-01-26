@@ -81,21 +81,21 @@
         <div class="panel panel-solid-info widget-mini">
             <div class="panel-body">
                 <i class="icon-bar-chart"></i>
-                <span class="total text-center">Moving Averages</span>
+                <span class="total text-center"><a href="http://www.investopedia.com/university/movingaverage/movingaverages2.asp" target="_blank">Moving Averages</a></span>
                 <div class="row">
                     <div class="col-md-6">
-                        <span class="title text-left">MA(15): $XXX</span>
+                        <span class="title text-left">MA(15): ${{selectedStock.movingAverages.days15}}</span>
                     </div>
                     <div class="col-md-6">
-                        <span class="title text-right">MA(100): $XXX</span>
+                        <span class="title text-right">MA(100): ${{selectedStock.movingAverages.days50}}</span>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
-                        <span class="title text-left">MA(50): $XXX</span>
+                        <span class="title text-left">MA(50): ${{selectedStock.movingAverages.days100}}</span>
                     </div>
                     <div class="col-md-6">
-                        <span class="title text-right">MA(200): $XXX</span>
+                        <span class="title text-right">MA(200): ${{selectedStock.movingAverages.days200}}</span>
                     </div>
                 </div>
             </div>
@@ -205,12 +205,6 @@
             <p>Sector: {{stockInfo.sector}}</p>
             <p>Industry Category: {{stockInfo.industryCategory}}</p>
             <p>Industry Group: {{stockInfo.industryGroup}}</p>
-            <br/>
-            <p><a href="http://www.investopedia.com/university/movingaverage/movingaverages2.asp" target="_blank">Moving Averages</a><p>
-            <p>MA(15): {{stockInfo.movingAverages.days15}}</p>
-            <p>MA(50): {{stockInfo.movingAverages.days50}}</p>
-            <p>MA(100): {{stockInfo.movingAverages.days100}}</p>
-            <p>MA(200): {{stockInfo.movingAverages.days200}}</p>
         </div>
     </div>
 
@@ -232,12 +226,6 @@
                 <p>Sector: {{stockInfo.sector}}</p>
                 <p>Industry Category: {{stockInfo.industryCategory}}</p>
                 <p>Industry Group: {{stockInfo.industryGroup}}</p>
-                <br/>
-                <p><a href="http://www.investopedia.com/university/movingaverage/movingaverages2.asp" target="_blank">Moving Averages</a><p>
-                <p>MA(15): {{stockInfo.movingAverages.days15}}</p>
-                <p>MA(50): {{stockInfo.movingAverages.days50}}</p>
-                <p>MA(100): {{stockInfo.movingAverages.days100}}</p>
-                <p>MA(200): {{stockInfo.movingAverages.days200}}</p>
             </div>
         </div>
     </div>

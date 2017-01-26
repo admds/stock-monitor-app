@@ -271,6 +271,11 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
     $scope.selectStock = function(stockInfo) {
         $scope.selectedStock = stockInfo;
         $scope.createChart();
+
+        $scope.selectedStock.movingAverages.days15 = stockInfo.movingAverages.days15;
+        $scope.selectedStock.movingAverages.days50 = stockInfo.movingAverages.days50;
+        $scope.selectedStock.movingAverages.days100 = stockInfo.movingAverages.days100;
+        $scope.selectedStock.movingAverages.days200 = stockInfo.movingAverages.days200;
     };
 
     $scope.getStockKey = function(symbol) {

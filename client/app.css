@@ -75,6 +75,12 @@
     background-color: #fff;
 }
 
+.panel-open > div.panel-heading {
+    color: #fff;
+    background-color: #556b8d;
+    border-color: #556b8d;
+}
+
 .panel-heading > .panel-title {
     font-size: 0.813em;
     font-weight: bold;
@@ -84,13 +90,24 @@ p {
     font-size: 0.875em;
 }
 
-a, a:link, a:visited {
+.total.text-center a {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.panel.panel-default > .panel-heading > .panel-title > a > .ng-binding > a {
     text-decoration: none;
     outline: none;
     color: #2e2e32;
 }
 
-a:hover {
+.panel.panel-default.panel-open > .panel-heading > .panel-title > a > .ng-binding > a {
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+}
+
+.panel.panel-default > .panel-heading > .panel-title > a > .ng-binding > a:hover {
     color: #999999;
     text-decoration: none;
 }
@@ -103,6 +120,14 @@ a:hover {
 .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
     font-weight: 500px;
     line-height: 1.1;
+}
+
+.favorite.glyphicon.glyphicon-heart, .favorite.glyphicon.glyphicon-heart-empty {
+    color: #ff4d4d;
+}
+
+.glyphicon.glyphicon-remove {
+    color: #2e2e32;
 }
 
 body {
@@ -133,12 +158,6 @@ body {
     font-size: 1em;
     display: block;
 }
-
-/*div.panel-default.ng-scope.ng-isolate-scope.panel.panel-open > div.panel-heading {
-    color: #fff;
-    background-color: #337ab7;
-    border-color: #2e6da4;
-}*/
 
 li {
     cursor: pointer;
