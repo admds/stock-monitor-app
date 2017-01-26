@@ -116,6 +116,10 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
         }
     };
 
+    $scope.hasStockSelected = function() {
+        return $scope.selectedStock;
+    };
+
     $scope.createChart = function() {
         if (!$scope.selectedStock) {
             return;
