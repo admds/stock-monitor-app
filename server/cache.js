@@ -30,7 +30,9 @@ module.exports.Cache = class Cache {
             secondsUntilExpire = (stockMarketCloseHour - hours) * 60 * 60;
         }
 
-        client.setex(this.getCacheKey(uri, symbol), secondsUntilExpire, value, redis.print);
+        var key = this.getCacheKey(uri, symbol);
+        winston.info('Caching using key: %s. Item will expire in %s seconds.', key, secondsUntilExpire);
+        client.setex(key, secondsUntilExpire, value);
     }
 
     getCacheItem(uri, symbol, callback) {

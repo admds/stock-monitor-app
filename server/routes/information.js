@@ -15,7 +15,7 @@ router.get('/', function(request, response) {
 				winston.error('Cache error:', error);
 			}
 			else if(item) {
-				winston.info('Cache hit', cache.getCacheKey('information', request.query.symbol));
+				winston.info('Cache hit for key %s.', cache.getCacheKey('information', request.query.symbol));
 				response.send(item);
 				return;
 			}

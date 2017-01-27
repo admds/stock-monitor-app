@@ -13,7 +13,7 @@ router.get('/', function(request, response) {
 			if (error) {
 				winston.error('Cache Error:', error);
 			} else if (item) {
-				winston.info('Cache hit:', cache.getCacheKey('prices', request.query.symbol));
+				winston.info('Cache hit for key %s', cache.getCacheKey('prices', request.query.symbol));
 				response.send(item);
 				return;
 			}
