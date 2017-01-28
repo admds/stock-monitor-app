@@ -45,7 +45,7 @@
     </div>
 </div>
 </div>
-<div class="col-md-6" ng-show="hasStockSelected()">
+<div class="col-md-6 fade" ng-show="hasStockSelected()">
 <div class="row">
     <div class="col-md-6">
         <div class="panel panel-solid-success widget-mini">
@@ -106,46 +106,8 @@
 
 </div>
 
-
-    <!-- <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Search</h3>
-        </div>
-        <div>
-            <form ng-submit="submit()" role="search">
-                <div uib-alert
-                class="alert"
-                dismiss-on-timeout="3000"
-                ng-repeat="alert in alerts"
-                close="closeAlert($index)"
-                ng-class="'alert-danger'">{{alert.msg}}
-                </div>
-
-                <div class="col-sm-10">
-                    <input type="text" readonly="readonly" class="form-control" value="Stock Lookup: {{selectedSymbol.ticker}} {{selectedSymbol.name}}">
-                </div>
-
-                <div class="form-group col-sm-10">
-                    <input type="text"
-                    ng-model="selectedSymbol"
-                    uib-typeahead="stockInfo as stockInfo.ticker for stockInfo in stockCompanies | filter:$viewValue | limitTo:20"
-                    placeholder="Stock Symbol"
-                    class="form-control"
-                    typeahead-template-url="typeahead.html"/>
-                </div>
-
-                <div class="col-sm-10">
-                    <button type="submit"
-                    class="btn btn-primary"
-                    ng-disabled="submitButtonDisabled">
-                    Submit
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>-->
-    <div class="row">
-    <div class="col-md-6">
+<div class="row">
+<div class="col-md-6">
 
 <div class="panel panel-default">
 <div class="panel-heading">
@@ -232,12 +194,12 @@
 </div>
 </div>
 </div>
-<div class=col-md-6>
+<div class="col-md-6 fade" ng-show="hasStockSelected()">
     <div class="panel panel-default">
         <div id="container"></div>
     </div>
 </div>
-<div id="panel-news" class="col-md-6" ng-show="hasStockSelected()">
+<div id="panel-news" class="col-md-6 fade" ng-show="hasStockSelected()">
  <div class="panel panel-default">
     <div class="panel-heading">
         <h3 class="panel-title"><i class="glyphicon glyphicon-briefcase"></i>&nbsp;News</h3>
