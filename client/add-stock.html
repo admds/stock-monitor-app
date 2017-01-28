@@ -52,7 +52,7 @@
             <div class="panel-body">
                 <i class="icon-bar-chart"></i>
                 <span class="total text-center">Close Price</span>
-                <span class="title text-center">$XXX</span>
+                <span class="title text-center">${{selected.info.close_price}}</span>
             </div>
         </div>
     </div>
@@ -83,20 +83,12 @@
                 <i class="icon-bar-chart"></i>
                 <span class="total text-center"><a href="http://www.investopedia.com/university/movingaverage/movingaverages2.asp" target="_blank">Moving Averages</a></span>
                 <div class="row">
-                    <div class="col-md-6">
-                        <span class="title text-left">MA(15): ${{selectedStock.movingAverages.days15}}</span>
-                    </div>
-                    <div class="col-md-6">
-                        <span class="title text-right">MA(100): ${{selectedStock.movingAverages.days50}}</span>
-                    </div>
+                        <span class="title text-left left">MA(15): ${{selectedStock.movingAverages.days15}}</span>
+                        <span class="title text-right right">MA(100): ${{selectedStock.movingAverages.days100}}</span>
                 </div>
                 <div class="row">
-                    <div class="col-md-6">
-                        <span class="title text-left">MA(50): ${{selectedStock.movingAverages.days100}}</span>
-                    </div>
-                    <div class="col-md-6">
-                        <span class="title text-right">MA(200): ${{selectedStock.movingAverages.days200}}</span>
-                    </div>
+                        <span class="title text-left left">MA(50): ${{selectedStock.movingAverages.days50}}</span>
+                        <span class="title text-right right">MA(200): ${{selectedStock.movingAverages.days200}}</span>
                 </div>
             </div>
         </div>
@@ -206,7 +198,7 @@
     </div>
     <div class=panel-body>
         <div uib-accordion close-others=true>
-            <div ng-repeat="newsInfo in news">
+            <div ng-repeat="newsInfo in selected.news">
                 <div uib-accordion-group
                     class="panel panel-default">
                     <uib-accordion-heading>

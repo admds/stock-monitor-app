@@ -27,7 +27,6 @@
     font-weight: normal;
     border-radius: 3px;
     padding: 8px 14px;
-    margin-top: -15px;
     margin-bottom: 5px;
     margin-right: 10px;
 }
@@ -190,6 +189,20 @@ div.panel-default.ng-scope.ng-isolate-scope.panel {
     opacity: 0;
 }
 /*Fade CSS end*/
+
+/* Left and Right align CSS*/
+.left
+{
+  float: left;
+  padding-left: 15px;
+}
+
+.right
+{
+  float: right;
+  padding-right: 15px;
+}
+/* Left and Right align CSS end*/
 
 .gly-spin {
     -webkit-animation: spin 2s infinite linear;
