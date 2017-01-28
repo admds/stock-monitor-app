@@ -81,7 +81,9 @@
         <div class="panel panel-solid-info widget-mini">
             <div class="panel-body">
                 <i class="icon-bar-chart"></i>
-                <span class="total text-center"><a href="http://www.investopedia.com/university/movingaverage/movingaverages2.asp" target="_blank">Moving Averages</a></span>
+                <span class="total text-center"><a href="http://www.investopedia.com/university/movingaverage/movingaverages2.asp" target="_blank">Moving Averages</a>
+                    <i class="glyphicon glyphicon-cog gly-spin" ng-hide="!selectedStock.loadingStockPrices"></i>
+                </span>
                 <div class="row">
                     <div class="col-md-6">
                         <span class="title text-left">MA(15): ${{selectedStock.movingAverages.days15}}</span>
@@ -202,16 +204,18 @@
 <div id="panel-news" class="col-md-6 fade" ng-show="hasStockSelected()">
  <div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="panel-title"><i class="glyphicon glyphicon-briefcase"></i>&nbsp;News</h3>
+        <h3 class="panel-title"><i class="glyphicon glyphicon-briefcase"></i>&nbsp;News
+            <i class="glyphicon glyphicon-cog gly-spin" ng-hide="!selectedStock.loadingStockNews"></i>
+        </h3>
     </div>
     <div class=panel-body>
         <div uib-accordion close-others=true>
-            <div ng-repeat="newsInfo in news">
+            <div ng-repeat="newsInfo in selectedStock.news">
                 <div uib-accordion-group
                     class="panel panel-default">
                     <uib-accordion-heading>
                         <a>{{newsInfo.title}}</a>
-                        <p>{{newsInfo.publication_date}}</p>
+                        <p>{{newsInfo.publicationDate.toLocaleString()}}</p>
                     </uib-accordion-heading>
                     <p>{{newsInfo.summary}}</p>
                     <p><a href="{{newsInfo.url}}" target="_blank">Read More</a>

@@ -74,52 +74,86 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 
                 $scope.addOrUpdateStock(stockInfo);
 
-                // Load the rest of the stock information
-                var informationCall = $http.get('/information', {
-                    params: {
-                        symbol: stockInfo.symbol
-                    }
-                }).then(function(informationResponse) {
-                    // Set the information that we just loaded.
-                    stockInfo.sector = informationResponse.data.sector;
-                    stockInfo.industryCategory = informationResponse.data.industry_category;
-                    stockInfo.industryGroup = informationResponse.data.industry_group;
-
-                    $scope.addOrUpdateStock(stockInfo);
-                    var pricesCall = $http.get('/prices', {
-                        params: {
-                            symbol: stockInfo.symbol
-                        }
-                    }).then(function(pricesResponse) {
-                        var allClosePrices = pricesResponse.data.data.map(function (dataPoint) {return dataPoint.close;})
-                        $scope.calcMovingAverages(allClosePrices, stockInfo);
-
-                        stockInfo.prices = $scope.reverseArray(pricesResponse.data.data.map(function(dataPoint) {
-                            return [Date.parse(dataPoint.date), dataPoint.close];
-                        }))
-
-                        // RSI is an array of values based on a 14-day interval.
-                        stockInfo.relativeStrengthIndex = $scope.reverseArray($scope.calcRSI(pricesResponse.data.data, stockInfo));
-
-                        // Save volume per day over last 3 months (more data points are not needed)
-                        stockInfo.volume = $scope.reverseArray(pricesResponse.data.data.map(function (dataPoint) {
-                            return [Date.parse(dataPoint.date), dataPoint.volume];
-                        }));
-                        stockInfo.loading = false;
-                        $scope.addOrUpdateStock(stockInfo);
-                        $scope.toggle = true;
-                    });
-                });
+                $scope.loadExtraStockInformation(stockInfo);
+                $scope.loadStockPrices(stockInfo);
             }
             else {
-                $scope.toggle = true;
                 $scope.alerts.push({msg: 'Already watching ' + $scope.selectedSymbol.ticker});
             }
         }
         else {
-            $scope.toggle = true;
             $scope.alerts.push({msg: 'Please enter a stock symbol.'});
         }
+    };
+
+    $scope.loadExtraStockInformation = function(stockInfo) {
+        // Load the rest of the stock information
+        stockInfo.loadingExtraStockInformation = true;
+        $http.get('/information', {
+            params: {
+                symbol: stockInfo.symbol
+            }
+        }).then(function(informationResponse) {
+            // Set the information that we just loaded.
+            stockInfo.sector = informationResponse.data.sector;
+            stockInfo.industryCategory = informationResponse.data.industry_category;
+            stockInfo.industryGroup = informationResponse.data.industry_group;
+
+            stockInfo.loadingExtraStockInformation = false;
+            stockInfo.loading = stockInfo.loadingStockPrices || stockInfo.loadingExtraStockInformation;
+            $scope.addOrUpdateStock(stockInfo);
+        });
+    };
+
+    $scope.loadStockPrices = function(stockInfo, callback) {
+        stockInfo.loadingStockPrices = true;
+        $http.get('/prices', {
+            params: {
+                symbol: stockInfo.symbol
+            }
+        }).then(function(pricesResponse) {
+            var allClosePrices = pricesResponse.data.data.map(function (dataPoint) {return dataPoint.close;})
+            $scope.calcMovingAverages(allClosePrices, stockInfo);
+
+            stockInfo.prices = $scope.reverseArray(pricesResponse.data.data.map(function(dataPoint) {
+                return [Date.parse(dataPoint.date), dataPoint.close];
+            }))
+
+            // RSI is an array of values based on a 14-day interval.
+            stockInfo.relativeStrengthIndex = $scope.reverseArray($scope.calcRSI(pricesResponse.data.data, stockInfo));
+
+            // Save volume per day over last 3 months (more data points are not needed)
+            stockInfo.volume = $scope.reverseArray(pricesResponse.data.data.map(function (dataPoint) {
+                return [Date.parse(dataPoint.date), dataPoint.volume];
+            }));
+            stockInfo.loadingStockPrices = false;
+            stockInfo.loading = stockInfo.loadingStockPrices || stockInfo.loadingExtraStockInformation;
+            $scope.addOrUpdateStock(stockInfo);
+            if (callback) {
+                callback();
+            }
+        });
+    };
+
+    $scope.loadStockNews = function(stockInfo) {
+        stockInfo.loadingStockNews = true;
+        $http.get('/news', {
+            params: {
+                symbol: stockInfo.symbol
+            }
+        }).then(function(newsResponse) {
+            // We only want the first 10 news items. Also convert the date string into a date object.
+            stockInfo.news = newsResponse.data.data.splice(0, 11).map(function(news) {
+                return {
+                    title: news.title,
+                    url: news.url,
+                    publicationDate: new Date(news.publication_date),
+                    summary: news.summary
+                };
+            });
+
+            stockInfo.loadingStockNews = false;
+        });
     };
 
     $scope.hasStockSelected = function() {
@@ -241,6 +275,7 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 
     // Display stock information and saves last 200 days of closing prices to cookie.
     $scope.calcMovingAverages = function(allClosePrices, stockInfo) {
+        stockInfo.movingAverages = {};
         stockInfo.movingAverages.days15 = $scope.calcMovingAverage(allClosePrices, 15).toFixed(2);
         stockInfo.movingAverages.days50 = $scope.calcMovingAverage(allClosePrices, 50).toFixed(2);
         stockInfo.movingAverages.days100 = $scope.calcMovingAverage(allClosePrices, 100).toFixed(2);
@@ -366,29 +401,14 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 
     $scope.selectStock = function(stockInfo) {
         $scope.selectedStock = stockInfo;
-        $scope.createChart();
 
-        $scope.selectedStock.movingAverages.days15 = stockInfo.movingAverages.days15;
-        $scope.selectedStock.movingAverages.days50 = stockInfo.movingAverages.days50;
-        $scope.selectedStock.movingAverages.days100 = stockInfo.movingAverages.days100;
-        $scope.selectedStock.movingAverages.days200 = stockInfo.movingAverages.days200;
-
-        var newsCall = $http.get('/news', {
-            params: {
-                symbol: stockInfo.symbol
-            }
-        }).then(function(newsResponse) {
-            $scope.news = new Array(10);
-
-            for (var index = 0; index < 10; index++) {
-                $scope.news[index] = newsResponse.data.data[index];
-
-                var length = $scope.news[index].publication_date.length;
-                var publication_date = $scope.news[index].publication_date.substr(0, length - 5) + "UTC";
-
-                $scope.news[index].publication_date = publication_date;
-            }
+        $scope.loadExtraStockInformation(stockInfo);
+        $scope.loadStockPrices(stockInfo, function() {
+            $scope.createChart();
         });
+        $scope.loadStockNews(stockInfo);
+
+
     };
 
     $scope.getStockKey = function(symbol) {
