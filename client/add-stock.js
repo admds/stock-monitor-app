@@ -11,7 +11,6 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 
 .controller('StockLookupCtrl', function($scope, $http, $cookies) {
     $scope.alerts = [];
-    $scope.news = [];
     $scope.stocks = [];
     $scope.stockCompanies = [];
     $scope.orderStocksBy = 'symbol';
