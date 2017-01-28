@@ -93,12 +93,17 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
                         var allClosePrices = pricesResponse.data.data.map(function (dataPoint) {return dataPoint.close;})
                         $scope.calcMovingAverages(allClosePrices, stockInfo);
 
+                        stockInfo.prices = $scope.reverseArray(pricesResponse.data.data.map(function(dataPoint) {
+                            return [Date.parse(dataPoint.date), dataPoint.close];
+                        }))
+
                         // RSI is an array of values based on a 14-day interval.
-                        var rsi = $scope.reverseArray($scope.calcRSI(allClosePrices, stockInfo));
+                        stockInfo.relativeStrengthIndex = $scope.reverseArray($scope.calcRSI(pricesResponse.data.data, stockInfo));
 
                         // Save volume per day over last 3 months (more data points are not needed)
-                        var allVolume = pricesResponse.data.data.map(function (dataPoint) {return dataPoint.volume;})
-                        stockInfo.volume = allVolume.slice(0, 90);
+                        stockInfo.volume = $scope.reverseArray(pricesResponse.data.data.map(function (dataPoint) {
+                            return [Date.parse(dataPoint.date), dataPoint.volume];
+                        }));
                         stockInfo.loading = false;
                         $scope.addOrUpdateStock(stockInfo);
                         $scope.toggle = true;
@@ -125,21 +130,98 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
             return;
         }
 
-        console.log('Creating a chart for ', $scope.selectStock.symbol);
-
         // Create the chart
+        console.log('Creating a chart for ', $scope.selectedStock.symbol);
         Highcharts.stockChart('container', {
+            chart:{
+                panning: false
+            },
             rangeSelector: {
                 selected: 1
             },
+            xAxis: {
+                type: 'datetime',
+                dateTimeLabelFormats: { // don't display the dummy year
+                    month: '%e. %b',
+                    year: '%b'
+                },
+                title: {
+                     text: 'Date'
+                 }
+            },
+
+            yAxis: [{
+                labels: {
+                    format: '{value}',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                title: {
+                    text: 'Volume',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                opposite: true
+            },
+
+            {
+                labels: {
+                    format: '{value}',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                },
+                title: {
+                    text: 'RSI',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                },
+                opposite: true
+            },
+            {
+                labels: {
+                    format: '{value}',
+                    style: {
+                        color: Highcharts.getOptions().colors[2]
+                    }
+                },
+                title: {
+                    text: 'Price',
+                    style: {
+                        color: Highcharts.getOptions().colors[2]
+                    }
+                },
+                opposite: false
+            }
+            ],
 
             title: {
-                text: $scope.selectedStock.symbol + ' - ' + $scope.selectedStock.name + ' Stock Price'
+                text: $scope.selectedStock.symbol + ' - ' + $scope.selectedStock.name
             },
 
             series: [{
-                name: $scope.selectedStock.symbol,
+                name: 'Volume Traded',
                 data: $scope.selectedStock.volume,
+                yAxis: 0,
+                tooltip: {
+                    valueDecimals: 2
+                }
+            },
+            {
+                name: 'RSI',
+                data: $scope.selectedStock.relativeStrengthIndex,
+                yAxis: 1,
+                tooltip: {
+                    valueDecimals: 2
+                }
+            },
+            {
+                name: 'Close Price',
+                data: $scope.selectedStock.prices,
+                yAxis: 2,
                 tooltip: {
                     valueDecimals: 2
                 }
@@ -158,14 +240,12 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 
     // Display stock information and saves last 200 days of closing prices to cookie.
     $scope.calcMovingAverages = function(allClosePrices, stockInfo) {
-        stockInfo.movingAverages.days15 = $scope.calcMovingAverage(allClosePrices, 15);
-        stockInfo.movingAverages.days50 = $scope.calcMovingAverage(allClosePrices, 50);
-        stockInfo.movingAverages.days100 = $scope.calcMovingAverage(allClosePrices, 100);
-        stockInfo.movingAverages.days200 = $scope.calcMovingAverage(allClosePrices, 200);
+        stockInfo.movingAverages.days15 = $scope.calcMovingAverage(allClosePrices, 15).toFixed(2);
+        stockInfo.movingAverages.days50 = $scope.calcMovingAverage(allClosePrices, 50).toFixed(2);
+        stockInfo.movingAverages.days100 = $scope.calcMovingAverage(allClosePrices, 100).toFixed(2);
+        stockInfo.movingAverages.days200 = $scope.calcMovingAverage(allClosePrices, 200).toFixed(2);
 
         stockInfo.closePrices = $scope.reverseArray(allClosePrices.slice(0, 200));
-
-        return;
     };
 
     $scope.calcMovingAverage = function(allClosePrices, numDays) {
@@ -176,7 +256,7 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
     // General calculate average in array.
     $scope.calcArrayAverage = function(arr) {
         var sum = arr.reduce(function(a, b) { return a + b; });
-        return (sum / arr.length).toFixed(2);
+        return (sum / arr.length);
     };
 
     /** Definition RSI (Relative Strength Index)-
@@ -189,50 +269,53 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
     Overbought = RSI > 70
     Oversold = RSI < 30
     **/
-    $scope.calcRSI = function(allClosePrices, stockInfo) {
+    $scope.calcRSI = function(allDataPoints, stockInfo) {
         console.log("Calculating RSI...");
 
         // Changes is the price difference, both plus and minus, between days.
-        var changes = new Array(allClosePrices.length - 1);
-        for (var index = 0; index < changes.length; index++) {
-            changes[index] = (allClosePrices[index] - allClosePrices[index + 1]).toFixed(2);
-        }
+        var changes = [];
+        var changes = allDataPoints.slice(0, allDataPoints.length - 1).map(function(dataPoint, index) {
+            return {
+                date: Date.parse(dataPoint.date),
+                change: dataPoint.close - allDataPoints[index + 1].close
+            };
+        });
 
-        var gains = new Array(changes.length);
-        var losses = new Array(changes.length);
-
-        for (var index = 0; index < changes.length; index++) {
-            if (changes[index] <= 0) {
-                gains[index] = 0;
-                losses[index] = changes[index] * -1;
-            } else {
-                gains[index] = changes[index] * 1;
-                losses[index] = 0;
+        var gainsAndLosses = [];
+        changes.forEach(function(change) {
+            var gain = 0;
+            var loss = 0;
+            if (change.change <= 0) {
+                loss = change.change * -1;
             }
-        }
-
-        // Get average gains and average losses.
-        var avgGains = new Array(changes.length - 13);
-        var avgLosses = new Array(changes.length - 13);
-        for (var index = 0; index < avgGains.length; index++) {
-            avgGains[index] = $scope.calcArrayAverage(gains.slice(index, index + 14)) * 1;
-            avgLosses[index] = $scope.calcArrayAverage(losses.slice(index, index + 14)) * 1;
-        }
-
-        // Calculate RS = (Average gains over 14 days) / (Average losses over 14 days).
-        var rs = new Array(avgGains.length);
-        for (var index = 0; index < avgGains.length - 15; index++) {
-            rs[index] = avgGains[index] / avgLosses[index];
-        }
-
-        var rsi = new Array(rs.length);
-        for (var index = 0; index < rsi.length - 1; index++) {
-            if (avgLosses[index] < 0) {
-                rsi[index] = 100;
-            } else {
-                rsi[index] = 100 - (100 / (1 + rs[index]));
+            else {
+                gain = change.change;
             }
-        }
+
+            gainsAndLosses.push({
+                date: change.date,
+                gain: gain,
+                loss: loss
+            });
+        });
+
+        var rsi = gainsAndLosses.slice(0, gainsAndLosses.length - 13).map(function(gainAndLoss, index) {
+            // Get average gains and average losses over a two week period.
+            var avgGain = $scope.calcArrayAverage(gainsAndLosses.slice(index, index + 14).map(function(gal) {
+                return gal.gain;
+            }));
+            var avgLoss = $scope.calcArrayAverage(gainsAndLosses.slice(index, index + 14).map(function(gal) {
+                return gal.loss;
+            }));
+
+            // Calculate RSI = 100 - (100 / (1+Average gains over 14 days) / (Average losses over 14 days)).
+            var rsi = 100;
+            if (avgLoss > 0) {
+                rsi = 100 - (100 / (1 + avgGain / avgLoss));
+            }
+
+            return [gainAndLoss.date, rsi];
+        });
 
         return rsi;
     };
@@ -251,7 +334,19 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
         }
 
         // Update the cached stock information.
-        $cookies.put(key, JSON.stringify(stockInfo));
+
+        $cookies.put(key, JSON.stringify($scope.getCookieStock(stockInfo)));
+    };
+
+    $scope.getCookieStock = function(stockInfo) {
+        return {
+            symbol: stockInfo.symbol,
+            name: stockInfo.name,
+            sector: stockInfo.sector,
+            industryGroup: stockInfo.industryGroup,
+            industryCategory: stockInfo.industryCategory,
+            favorite: stockInfo.favorite
+        };
     };
 
     $scope.addSelectedSymbolWatcher = function() {
@@ -303,7 +398,7 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
         // Re-add the stock information to the cookie with the updated favorite value.
         var key = $scope.getStockKey(stockInfo.symbol)
         $cookies.remove(key);
-        $cookies.put(key, JSON.stringify(stockInfo));
+        $cookies.put(key, JSON.stringify($scope.getCookieStock(stockInfo)));
     };
 
     // Removes view of WATCHED and deletes cookie.
