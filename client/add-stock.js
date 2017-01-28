@@ -111,6 +111,10 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
                 symbol: stockInfo.symbol
             }
         }).then(function(pricesResponse) {
+            stockInfo.closePrice = pricesResponse.data.data[0].close;
+            stockInfo.dayLow = pricesResponse.data.data[0].low;
+            stockInfo.dayHigh = pricesResponse.data.data[0].high;
+
             var allClosePrices = pricesResponse.data.data.map(function (dataPoint) {return dataPoint.close;})
             $scope.calcMovingAverages(allClosePrices, stockInfo);
 
