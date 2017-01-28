@@ -32,23 +32,28 @@
     margin-right: 10px;
 }
 
-.btn-primary {
+.btn-primary, .btn-primary:active, .btn-primary:focus  {
     color: #fff;
     background-color: #556b8d;
+    border: none;
 }
 
-.btn-primary:hover {
+.btn-primary:disabled, .btn-primary:hover {
     background-color: #5A7196;
 }
 
 .btn-primary:disabled:hover {
-    background-color: #5A7196;
+    background-color: #919FB5;
 }
 
 .btn-primary.btn-trans {
     color: #556b8d;
     background-color: transparent;
     border: solid thin #556b8d;
+}
+
+.glyphicon-chevron-down {
+    padding-left: 5px;
 }
 
 .dropdown-menu {
@@ -108,8 +113,8 @@ p {
 }
 
 .panel.panel-default > .panel-heading > .panel-title > a > .ng-binding > a:hover {
-    color: #999999;
     text-decoration: none;
+    color: #999999;
 }
 
 .btn-group {
@@ -174,6 +179,17 @@ div.panel-default.ng-scope.ng-isolate-scope.panel {
     margin: 5px;
     width: 50%;
 }
+
+/*Fade CSS*/
+.fade {
+    transition: all linear 900ms;
+    opacity: 1;
+}
+
+.fade.ng-hide {
+    opacity: 0;
+}
+/*Fade CSS end*/
 
 .gly-spin {
     -webkit-animation: spin 2s infinite linear;

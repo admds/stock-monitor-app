@@ -11,6 +11,7 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 
 .controller('StockLookupCtrl', function($scope, $http, $cookies) {
     $scope.alerts = [];
+    $scope.news = [];
     $scope.stocks = [];
     $scope.stockCompanies = [];
     $scope.orderStocksBy = 'symbol';
@@ -371,6 +372,23 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
         $scope.selectedStock.movingAverages.days50 = stockInfo.movingAverages.days50;
         $scope.selectedStock.movingAverages.days100 = stockInfo.movingAverages.days100;
         $scope.selectedStock.movingAverages.days200 = stockInfo.movingAverages.days200;
+
+        var newsCall = $http.get('/news', {
+            params: {
+                symbol: stockInfo.symbol
+            }
+        }).then(function(newsResponse) {
+            $scope.news = new Array(10);
+
+            for (var index = 0; index < 10; index++) {
+                $scope.news[index] = newsResponse.data.data[index];
+
+                var length = $scope.news[index].publication_date.length;
+                var publication_date = $scope.news[index].publication_date.substr(0, length - 5) + "UTC";
+
+                $scope.news[index].publication_date = publication_date;
+            }
+        });
     };
 
     $scope.getStockKey = function(symbol) {
