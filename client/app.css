@@ -95,8 +95,12 @@ p {
 }
 
 .total.text-center a {
-    color: #fff;
+    color: #565656;
     text-decoration: underline;
+}
+
+.row-chart, .row-news {
+    padding-left: 15px;
 }
 
 .panel.panel-default > .panel-heading > .panel-title > a > .ng-binding > a {
@@ -124,6 +128,10 @@ p {
 .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
     font-weight: 500px;
     line-height: 1.1;
+}
+
+.col-md-6 {
+    padding-right: 0px;
 }
 
 .favorite.glyphicon.glyphicon-heart, .favorite.glyphicon.glyphicon-heart-empty {

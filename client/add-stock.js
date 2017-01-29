@@ -115,12 +115,14 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
             stockInfo.dayLow = pricesResponse.data.data[0].low;
             stockInfo.dayHigh = pricesResponse.data.data[0].high;
 
+            $scope.selectedStock.date = pricesResponse.data.data[0].date;
+
             var allClosePrices = pricesResponse.data.data.map(function (dataPoint) {return dataPoint.close;})
             $scope.calcMovingAverages(allClosePrices, stockInfo);
 
             stockInfo.prices = $scope.reverseArray(pricesResponse.data.data.map(function(dataPoint) {
                 return [Date.parse(dataPoint.date), dataPoint.close];
-            }))
+            }));
 
             // RSI is an array of values based on a 14-day interval.
             stockInfo.relativeStrengthIndex = $scope.reverseArray($scope.calcRSI(pricesResponse.data.data, stockInfo));
@@ -161,6 +163,11 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 
     $scope.hasStockSelected = function() {
         return $scope.selectedStock;
+    };
+
+    $scope.hasStockSelectedDate = function() {
+        return $scope.selectedStock && $scope.selectedStock.date
+            && $scope.selectedStock.date != "";
     };
 
     $scope.createChart = function() {
@@ -368,7 +375,7 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
             $cookies.remove(key);
         }
         else {
-            // The stock doesn't exist add it  to watched stockes.
+            // The stock doesn't exist add it to watched stocks.
             $scope.stocks.push(stockInfo);
         }
 
