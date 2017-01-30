@@ -22,7 +22,7 @@ router.get('/', function(request, response) {
 			var credentials = require('./credentials.json');
 	        winston.info('Cache miss: retrieving data-points for %s.', request.query.symbol);
             var fullUrl = 'https://api.intrinio.com/data_point?identifier=' + request.query.symbol.toUpperCase() +
-                '&item=ask_price,pricetoearnings,52_week_low,52_week_high';
+                '&item=pricetoearnings,52_week_low,52_week_high';
 			httpRequest.get(fullUrl, function(error, stockResponse, body) {
 	            if (error) {
 	                winston.info('There was an error retrieving stock data-points for %s. Error:',
