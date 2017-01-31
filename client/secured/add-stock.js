@@ -5,7 +5,7 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 
 .config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/index', {
-        templateUrl: '/add-stock.html'
+        templateUrl: '/secured/add-stock.html'
     });
 }])
 
@@ -35,7 +35,7 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 
     // Loads static list of stocks for easy search
     $scope.loadStockCompanies = function() {
-        $http.get('/information').then(function(response) {
+        $http.get('/secured/information').then(function(response) {
             $scope.stockCompanies = response.data;
         });
     };
@@ -88,7 +88,7 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
     $scope.loadExtraStockInformation = function(stockInfo) {
         // Load the rest of the stock information
         stockInfo.loadingExtraStockInformation = true;
-        $http.get('/information', {
+        $http.get('/secured/information', {
             params: {
                 symbol: stockInfo.symbol
             }
@@ -106,7 +106,7 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 
     $scope.loadStockPrices = function(stockInfo, callback) {
         stockInfo.loadingStockPrices = true;
-        $http.get('/prices', {
+        $http.get('/secured/prices', {
             params: {
                 symbol: stockInfo.symbol
             }
@@ -142,7 +142,7 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 
     $scope.loadStockNews = function(stockInfo) {
         stockInfo.loadingStockNews = true;
-        $http.get('/news', {
+        $http.get('/secured/news', {
             params: {
                 symbol: stockInfo.symbol
             }

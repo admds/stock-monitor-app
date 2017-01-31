@@ -13,35 +13,35 @@
 </head>
 <body>
     <!-- Dependencies - Angular -->
-    <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/angular-route/angular-route.js"></script>
-    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="/client/bower_components/angular/angular.js"></script>
+    <script src="/client/bower_components/angular-route/angular-route.js"></script>
+    <script src="/client/bower_components/angular-cookies/angular-cookies.js"></script>
 
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-sanitize.js"></script>
 
     <!-- Dependencies - Bootstrap -->
-    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="/client/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    <!--Dependencies - Bootstrap select -->
-    <script src="bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
-    <link rel="stylesheet" href="bower_components/bootstrap-select/dist/css/bootstrap-select.css"></link>
-
-    <script src="http://code.highcharts.com/stock/highstock.src.js"></script>
+    <!-- Highcharts -->
+    <script src="client/third-party/highstock.js"></script>
 
     <!-- App dependencies -->
-    <link rel="stylesheet" href="/app.css"></link>
-    <script src="app.js"></script>
-    <script src="/add-stock.js"></script>
+    <link rel="stylesheet" href="/client/app.css"></link>
+    <script src="/secured/app.js"></script>
+    <script src="/secured/add-stock.js"></script>
 
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#"><i class="glyphicon glyphicon-stats"></i> <span>Stock</span> Monitor</a>
+                <a class="navbar-brand" href="#"><i class="glyphicon glyphicon-stats"></i><span>Stock</span> Monitor</a>
             </div>
+            <ul class="nav navbar-nav">
+                <li class="text-right right"><a href="/logout">Logout</a></li>
+            </ul>
         </div>
     </nav>
 
