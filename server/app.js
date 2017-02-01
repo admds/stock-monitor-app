@@ -60,8 +60,8 @@ app.use('/secured/news', newsRoute);
 app.use('/secured/data-points', dataPointsRoute);
 
 https.createServer({
-  key: fs.readFileSync('certificate/device.key'),
-  cert: fs.readFileSync('certificate/device.crt')
+  key: fs.readFileSync('./server/certificate/device.key'),
+  cert: fs.readFileSync('./server/certificate/device.crt')
 }, app).listen((process.env.PORT || 5555), function() {
 	winston.info('Application started.');
 });
