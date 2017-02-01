@@ -21,19 +21,27 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
     $scope.selectedStock = undefined;
     $scope.selectedSymbol = undefined;
     $scope.submitButtonDisabled = true;
-
+    $scope.user = {};
 
     $scope.initialize = function() {
         $scope.addSelectedSymbolWatcher();
-
+        $scope.loadCurrentUser();
         $scope.loadStockCompanies();
-
-        // If there are no displayed stocks, check cookies to display
-        if ($scope.stocks.length === 0) {
-            $scope.displayWatchedStocks();
-        }
-
         console.log('StockLookupCtrl init');
+    };
+
+    $scope.loadCurrentUser = function() {
+        $http.get('/secured/users?id=current').then(function(response) {
+            $scope.user = response;
+            $scope.stocks = $scope.user.stocks;
+        });
+    };
+
+    $scope.saveCurrentUser() {
+        $scope.user.stocks = $scope.stocks;
+        $http.post('/secured/users?id=current', $scope.user, null, 'application/json').then(function(response) {
+            // handle error responses
+        });
     };
 
     // Loads static list of stocks for easy search
@@ -43,36 +51,24 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
         });
     };
 
-    $scope.displayWatchedStocks = function () {
-        var cookies = $cookies.getAll();
-
-        for(var property in cookies) {
-            if (property.indexOf('stock.') === 0) {
-                var stockInfo = JSON.parse(cookies[property]);
-                $scope.stocks.push(stockInfo);
-            }
-        }
-    };
-
     // Update cookie with price bought and quantity bought of certain stock.
     $scope.saveOwned = function() {
         // Check that fields are with information to save.
         if ($scope.selectedSymbol && $scope.selectedSymbol.ticker && $scope.priceBought && $scope.quantityBought) {
-
-            var selectedCookie = $cookies.get($scope.getStockKey($scope.selectedSymbol.ticker));
-            //add price and quantity
-            //update cookie
+            // add price and quantity
+            // save current user
         }
     };
 
     $scope.submit = function() {
         // Check if symbol has been selected.
         if ($scope.selectedSymbol && $scope.selectedSymbol.ticker) {
-            // Check if we are already watching the selected symbol.
-            var cookieExists = $cookies.get($scope.getStockKey($scope.selectedSymbol.ticker));
+            var filteredStocks = $scope.stocks.filter(function(stock) {
+                return stock.symbol === $scope.selectedSymbol.ticker;
+            });
 
             // If not watching - make the GET call to retrieve stock information.
-            if (!cookieExists) {
+            if (filteredStocks.length === 0) {
                 // Go ahead and display the basic stock information (name and symbol).
                 var stockInfo = {
                     symbol : $scope.selectedSymbol.ticker,
@@ -86,7 +82,6 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
                 };
 
                 $scope.addOrUpdateStock(stockInfo);
-
                 $scope.loadExtraStockInformation(stockInfo);
                 $scope.loadStockPrices(stockInfo);
             }
@@ -402,25 +397,24 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
         return rsi;
     };
 
-    // Adds a stock to the watched list and updates the cookie for that stock.
+    // Adds a stock to the watched list and updates the saved values for that stock.
     $scope.addOrUpdateStock = function(stockInfo) {
         var key = $scope.getStockKey(stockInfo.symbol);
-        var cookieExists = $cookies.get(key);
-        if (cookieExists) {
+        var index = $scope.stocks.map(function(stock) {
+            return stock.symbol;
+        }).indexOf(stockInfo.symbol);
+        if (index >= 0) {
             // The stock already exists, remove the old information in case there is new information.
-            $cookies.remove(key);
-        }
-        else {
-            // The stock doesn't exist add it to watched stocks.
-            $scope.stocks.push(stockInfo);
+            $scope.stocks.splice(index, 1);
         }
 
-        // Update the cached stock information.
+        $scope.stocks.push(stockInfo);
 
-        $cookies.put(key, JSON.stringify($scope.getCookieStock(stockInfo)));
+        // Update the saved stock information.
+        $scope.saveCurrentUser();
     };
 
-    $scope.getCookieStock = function(stockInfo) {
+    $scope.getSavedStockInfo = function(stockInfo) {
         return {
             symbol: stockInfo.symbol,
             name: stockInfo.name,
@@ -479,22 +473,17 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
         }
 
         stockInfo.favorite = !stockInfo.favorite;
-
-        // Re-add the stock information to the cookie with the updated favorite value.
-        var key = $scope.getStockKey(stockInfo.symbol)
-        $cookies.remove(key);
-        $cookies.put(key, JSON.stringify($scope.getCookieStock(stockInfo)));
+        $scope.saveCurrentUser();
     };
 
-    // Removes view of WATCHED and deletes cookie.
+    // Removes view of WATCHED and deletes the save information.
     $scope.removeStock = function(symbol) {
         console.log('Removing %s from watched stocks.', symbol);
-
-        $cookies.remove($scope.getStockKey(symbol));
         var index = $scope.stocks.map(function(stock) {
             return stock.symbol;
         }).indexOf(symbol);
         $scope.stocks.splice(index, 1);
+        $scope.saveCurrentUser();
     };
 
     $scope.reverseArray = function (arr) {
