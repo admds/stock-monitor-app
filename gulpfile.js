@@ -21,7 +21,7 @@ gulp.task('serve', function(callback) {
     spawn('node', ['server/app.js'], { stdio: 'inherit' });
 
     browserSync({
-        proxy: 'localhost:5555'
+        proxy: 'https://localhost:5555'
     });
 
     gulp.watch(['./client/*.html', './client/*.js', './client/*.css'], {cwd: '.'}, reload);
