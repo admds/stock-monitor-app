@@ -191,6 +191,28 @@ li {
     margin-right: 0px;
 }
 
+.login-dropdown {
+    font-size: 0.9em;
+    font-weight: 600;
+    padding: 0 5px;
+    padding: 15px 15px;
+    float: right;
+    margin-right: -15px;
+    line-height: 20px;
+}
+
+.fa.fa-facebook {
+    margin-right: 5px;
+}
+
+.navbar-logout {
+    padding: 15px 15px;
+    float: right;
+    margin-right: -15px;
+    font-size: 15px;
+    line-height: 20px;
+}
+
 div.panel-default.ng-scope.ng-isolate-scope.panel {
     margin-top: 5px;
     margin-bottom: 5px;

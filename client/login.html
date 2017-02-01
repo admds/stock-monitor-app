@@ -1,4 +1,4 @@
-<html>
+<html ng-app="login">
 <!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
@@ -13,6 +13,11 @@
 </head>
 <body>
     <!-- Dependencies - Bootstrap -->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-animate.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-sanitize.js"></script>
+    <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.5.0.js"></script>
+
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Font Awesome -->
@@ -20,11 +25,20 @@
 
     <!-- App dependencies -->
     <link rel="stylesheet" href="client/app.css"></link>
+    <script src="/client/login.js"></script>
 
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
                 <a class="navbar-brand" href="#"><i class="glyphicon glyphicon-stats"></i><span>Stock</span> Monitor</a>
+            </div>
+            <div class="navbar-header right" uib-dropdown>
+                <a class="login-dropdown" uib-dropdown-toggle>Login<i class="glyphicon glyphicon-chevron-down"></i></a>
+                <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="logi-dropdown">
+                    <li>
+                        <a href="/auth/facebook"><i class="fa fa-facebook"></i>Login with Facebook</a>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
@@ -32,9 +46,5 @@
     <!--[if lt IE 7]>
     <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
-
-    <div ng-view>
-        <a href="/auth/facebook" class="btn btn-primary"><span class="fa fa-facebook"></span> Facebook</a>
-    </div>
 </body>
 </html>
