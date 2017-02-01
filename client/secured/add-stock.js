@@ -13,10 +13,13 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
     $scope.alerts = [];
     $scope.stocks = [];
     $scope.stockCompanies = [];
+
     $scope.orderStocksBy = 'symbol';
+    $scope.priceBought = undefined;
+    $scope.quantityBought = undefined;
     $scope.reverseStockOrder = false;
-    $scope.selectedSymbol = undefined;
     $scope.selectedStock = undefined;
+    $scope.selectedSymbol = undefined;
     $scope.submitButtonDisabled = true;
 
 
@@ -48,6 +51,17 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
                 var stockInfo = JSON.parse(cookies[property]);
                 $scope.stocks.push(stockInfo);
             }
+        }
+    };
+
+    // Update cookie with price bought and quantity bought of certain stock.
+    $scope.saveOwned = function() {
+        // Check that fields are with information to save.
+        if ($scope.selectedSymbol && $scope.selectedSymbol.ticker && $scope.priceBought && $scope.quantityBought) {
+
+            var selectedCookie = $cookies.get($scope.getStockKey($scope.selectedSymbol.ticker));
+            //add price and quantity
+            //update cookie
         }
     };
 
@@ -104,6 +118,27 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
         });
     };
 
+    $scope.loadDataPoints = function(stockInfo) {
+        $http.get('/data-points', {
+            params: {
+                symbol: stockInfo.symbol
+            }
+        }).then(function(dataPointsResponse) {
+            // Set the information that we just loaded.
+            if (dataPointsResponse.data.data[0].value == "nm") {
+                stockInfo.priceToEarnings = "Not Meaningful (Possible negative Earnings)"
+            }
+            else {
+                stockInfo.priceToEarnings = dataPointsResponse.data.data[0].value.toFixed(2);
+            }
+
+            stockInfo.low52week = dataPointsResponse.data.data[1].value;
+            stockInfo.high52week = dataPointsResponse.data.data[2].value;
+
+            $scope.addOrUpdateStock(stockInfo);
+        });
+    };
+
     $scope.loadStockPrices = function(stockInfo, callback) {
         stockInfo.loadingStockPrices = true;
         $http.get('/secured/prices', {
@@ -126,6 +161,7 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 
             // RSI is an array of values based on a 14-day interval.
             stockInfo.relativeStrengthIndex = $scope.reverseArray($scope.calcRSI(pricesResponse.data.data, stockInfo));
+            stockInfo.relativeStrengthIndex.current = stockInfo.relativeStrengthIndex[stockInfo.relativeStrengthIndex.length - 1][1].toFixed(2);
 
             // Save volume per day over last 3 months (more data points are not needed)
             stockInfo.volume = $scope.reverseArray(pricesResponse.data.data.map(function (dataPoint) {
@@ -413,6 +449,7 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
         $scope.selectedStock = stockInfo;
 
         $scope.loadExtraStockInformation(stockInfo);
+        $scope.loadDataPoints(stockInfo);
         $scope.loadStockPrices(stockInfo, function() {
             $scope.createChart();
         });

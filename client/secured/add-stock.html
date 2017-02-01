@@ -107,6 +107,34 @@
                         <p>Sector: {{stockInfo.sector}}</p>
                         <p>Industry Category: {{stockInfo.industryCategory}}</p>
                         <p>Industry Group: {{stockInfo.industryGroup}}</p>
+                        <div class="row">
+                            <span class="left">
+                                <button id="button-owned-question" type="button" class="btn btn-default btn-primary btn-trans" ng-click="showDetails = ! showDetails">
+                                    Own it?
+                                </button>
+                            </span>
+                            <span class="fade" ng-show="showDetails">
+                                <form ng-submit="saveOwned()" role="save-owned">
+                                    <span class="col-md-4 input-price">
+                                        <input type="text"
+                                        ng-model="priceBought"
+                                        placeholder="Price"
+                                        class="form-control"/>
+                                    </span>
+                                    <span class="col-md-3 input-quantity">
+                                        <input type="text"
+                                        ng-model="quantityBought"
+                                        placeholder="Qty"
+                                        class="form-control"/>
+                                    </span>
+                                    <span>
+                                        <button id="button-owned-confirm" type="submit" class="btn btn-default btn-primary btn-trans" ng-disabled="saveOwnedButtonDisabled">
+                                            <i class="glyphicon glyphicon-ok"></i>
+                                        </button>
+                                    </span>
+                                </form>
+                            </span>
+                        </div>
                     </div>
                 </div>
 
@@ -151,8 +179,9 @@
             <div class="panel widget-mini">
                 <div class="panel-body">
                     <i class="icon-bar-chart"></i>
-                    <span class="total text-center">P/E Ratio</span>
-                    <span class="title text-center">XXX</span>
+                    <i class="icon-bar-chart"></i>
+                    <span class="total text-center"><a href="http://www.investopedia.com/terms/p/price-earningsratio.asp" target="_blank">P/E Ratio</a></span>
+                    <span class="title text-center">{{selectedStock.priceToEarnings}}</span>
                 </div>
             </div>
         </div>
@@ -163,8 +192,8 @@
                 <div class="panel-body">
                     <i class="icon-bar-chart"></i>
                     <span class="total text-center">Daily Stats</span>
-                    <span class="title text-center">High: $XXX</span>
-                    <span class="title text-center">Low: $XXX</span>
+                    <span class="title text-center">High: ${{selectedStock.dayHigh}}</span>
+                    <span class="title text-center">Low: ${{selectedStock.dayLow}}</span>
                 </div>
             </div>
         </div>
@@ -172,8 +201,8 @@
             <div class="panel panel-solid-info widget-mini">
                 <div class="panel-body">
                     <i class="icon-bar-chart"></i>
-                    <span class="total text-center">RSI</span>
-                    <span class="title text-center">$XXX</span>
+                    <span class="total text-center"><a href="http://www.investopedia.com/terms/r/rsi.asp" target="_blank">RSI</a></span>
+                    <span class="title text-center">{{selectedStock.relativeStrengthIndex.current}}</span>
                 </div>
             </div>
         </div>
@@ -185,8 +214,8 @@
                 <div class="panel-body">
                     <i class="icon-bar-chart"></i>
                     <span class="total text-center">52 Week Stats</span>
-                    <span class="title text-center">High: $XXX</span>
-                    <span class="title text-center">Low: $XXX</span>
+                    <span class="title text-center">High: ${{selectedStock.high52week}}</span>
+                    <span class="title text-center">Low: ${{selectedStock.low52week}}</span>
                 </div>
             </div>
         </div>
