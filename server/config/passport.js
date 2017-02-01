@@ -1,16 +1,19 @@
+var winston = require('winston');
 var FacebookStrategy = require('passport-facebook').Strategy;
 var configAuth = require('./auth');
+var UserStorage = require('../user-storage.js');
+var userStorage = new UserStorage.UserStorage();
 
 module.exports = function(passport) {
 
     // used to serialize the user for the session
-    passport.serializeUser(function(id, done) {
-        done(null, id);
+    passport.serializeUser(function(user, done) {
+        done(null, user.id);
     });
 
     // used to deserialize the user
     passport.deserializeUser(function(id, done) {
-        done(null, id);
+        userStorage.getUser(id, done);
     });
 
     // code for login (use('local-login', new LocalStategy))
@@ -28,44 +31,31 @@ module.exports = function(passport) {
 
     // Facebook will send back the token and profile.
     function(token, refreshToken, profile, done) {
-
-        // asynchronous
         process.nextTick(function() {
-            return done(null, profile.id);
-            // // find the user in the database based on their facebook id
-            // User.findOne({ 'facebook.id' : profile.id }, function(err, user) {
-            //     console.log('facebook user', user);
-            //     // // if there is an error, stop everything and return that
-            //     // // ie an error connecting to the database
-            //     // if (err)
-            //     //     return done(err);
-            //     //
-            //     // // if the user is found, then log them in
-            //     // if (user) {
-            //     //     return done(null, user); // user found, return that user
-            //     // } else {
-            //     //     // if there is no user found with that facebook id, create them
-            //     //     var newUser = new User();
-            //     //
-            //     //     // set all of the facebook information in our user model
-            //     //     newUser.facebook.id = profile.id; // set the users facebook id
-            //     //     newUser.facebook.token = token; // we will save the token that facebook provides to the user
-            //     //     newUser.facebook.name  = profile.name.givenName + ' ' + profile.name.familyName; // look at the passport user profile to see how names are returned
-            //     //     newUser.facebook.email = profile.emails[0].value; // facebook can return multiple emails so we'll take the first
-            //     //
-            //     //     // save our user to the database
-            //     //     newUser.save(function(err) {
-            //     //         if (err)
-            //     //             throw err;
-            //     //
-            //     //         // if successful, return the new user
-            //     //         return done(null, newUser);
-            //     //     });
-            //     // }
-            //
-            // });
+            userStorage.getUser(profile.id, function(error, user) {
+                // Was there an error retrieving the user?
+                if (error) {
+                    winston.error('There was an error retrieving the Facebook user %s from storage. Error: ', profile.displayName, error);
+                    return done(error);
+                }
+
+                // Does the user already exist?
+                if (user) {
+                    winston.info('Found Facebook user %s.', user.name);
+                    return done(null, user);
+                }
+
+                // The user doesn't exist yet. Create a new user in storage.
+                winston.info('Creating a new user with id %s', profile.id);
+                var newUser = {
+                    id: profile.id,
+                    name: profile.displayName,
+                    stocks: []
+                };
+
+                userStorage.setUser(newUser);
+                return done(null, newUser);
+            });
         });
-
     }));
-
 };

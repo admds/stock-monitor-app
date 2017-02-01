@@ -7,15 +7,16 @@ var express = require('express');
 var winston = require('winston');
 var passport = require('passport');
 require('./config/passport')(passport);
-
-//Require for stock-info
+var connectEnsureLogin = require('connect-ensure-login');
+var expressSession = require('express-session');
 var bodyParser = require('body-parser');
+
+// Routes
 var informationRoute = require('./routes/information');
 var pricesRoute = require('./routes/prices');
 var newsRoute = require('./routes/news');
 var dataPointsRoute = require('./routes/data-points');
-var connectEnsureLogin = require('connect-ensure-login');
-var expressSession = require('express-session');
+var usersRoute = require('./routes/users');
 
 var app = express();
 app.use(expressSession({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
@@ -58,6 +59,7 @@ app.use('/secured/information', informationRoute);
 app.use('/secured/prices', pricesRoute);
 app.use('/secured/news', newsRoute);
 app.use('/secured/data-points', dataPointsRoute);
+app.use('/secured/users', usersRoute);
 
 https.createServer({
   key: fs.readFileSync('./server/certificate/device.key'),

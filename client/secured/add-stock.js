@@ -32,14 +32,14 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 
     $scope.loadCurrentUser = function() {
         $http.get('/secured/users?id=current').then(function(response) {
-            $scope.user = response;
+            $scope.user = response.data;
             $scope.stocks = $scope.user.stocks;
         });
     };
 
-    $scope.saveCurrentUser() {
-        $scope.user.stocks = $scope.stocks;
-        $http.post('/secured/users?id=current', $scope.user, null, 'application/json').then(function(response) {
+    $scope.saveCurrentUser = function() {
+        $scope.user.stocks = $scope.stocks.map($scope.getSavedStockInfo);
+        $http.post('/secured/users?id=' + $scope.user.id, $scope.user, null, 'application/json').then(function(response) {
             // handle error responses
         });
     };
@@ -134,7 +134,7 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
         });
     };
 
-    $scope.loadStockPrices = function(stockInfo, callback) {
+    $scope.loadStockPrices = function(stockInfo, stockSelected, callback) {
         stockInfo.loadingStockPrices = true;
         $http.get('/secured/prices', {
             params: {
@@ -145,7 +145,10 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
             stockInfo.dayLow = pricesResponse.data.data[0].low;
             stockInfo.dayHigh = pricesResponse.data.data[0].high;
 
-            $scope.selectedStock.date = pricesResponse.data.data[0].date;
+
+            if (stockSelected) {
+                $scope.selectedStock.date = pricesResponse.data.data[0].date;
+            }
 
             var allClosePrices = pricesResponse.data.data.map(function (dataPoint) {return dataPoint.close;})
             $scope.calcMovingAverages(allClosePrices, stockInfo);
@@ -430,6 +433,7 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
             var stockSymbols = $scope.stocks.map(function(stockInfo) {
                 return stockInfo.symbol;
             });
+
             if ($scope.selectedSymbol && $scope.selectedSymbol.ticker && stockSymbols.indexOf($scope.selectedSymbol.ticker) === -1 ) {
                 $scope.submitButtonDisabled = false;
             }
@@ -444,7 +448,7 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 
         $scope.loadExtraStockInformation(stockInfo);
         $scope.loadDataPoints(stockInfo);
-        $scope.loadStockPrices(stockInfo, function() {
+        $scope.loadStockPrices(stockInfo, true, function() {
             $scope.createChart();
         });
         $scope.loadStockNews(stockInfo);
