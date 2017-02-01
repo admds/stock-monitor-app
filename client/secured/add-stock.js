@@ -119,7 +119,7 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
     };
 
     $scope.loadDataPoints = function(stockInfo) {
-        $http.get('/data-points', {
+        $http.get('/secured/data-points', {
             params: {
                 symbol: stockInfo.symbol
             }
