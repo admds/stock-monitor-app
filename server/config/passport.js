@@ -1,10 +1,9 @@
 var winston = require('winston');
 var FacebookStrategy = require('passport-facebook').Strategy;
-var configAuth = require('./auth');
 var UserStorage = require('../user-storage.js');
 var userStorage = new UserStorage.UserStorage();
 
-module.exports = function(passport) {
+module.exports = function(passport, credentials) {
 
     // used to serialize the user for the session
     passport.serializeUser(function(user, done) {
@@ -23,9 +22,9 @@ module.exports = function(passport) {
     // FACEBOOK ================================================================
     // =========================================================================
     passport.use(new FacebookStrategy({
-        clientID: configAuth.facebookAuth.clientID,
-        clientSecret: configAuth.facebookAuth.clientSecret,
-        callbackURL: configAuth.facebookAuth.callbackURL,
+        clientID: credentials.facebook.clientID,
+        clientSecret: credentials.facebook.clientSecret,
+        callbackURL: credentials.facebook.callbackURL,
         enableProof: true
     },
 

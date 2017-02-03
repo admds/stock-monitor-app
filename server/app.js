@@ -6,17 +6,25 @@ var https = require('https');
 var express = require('express');
 var winston = require('winston');
 var passport = require('passport');
-require('./config/passport')(passport);
+
 var connectEnsureLogin = require('connect-ensure-login');
 var expressSession = require('express-session');
 var bodyParser = require('body-parser');
 
+var credentials = require('../credentials-test.json');
+winston.info('process.env.PROD', process.env.PROD);
+if (process.env.PROD) {
+	credentials = require('../credentials.json');
+}
+
+require('./config/passport')(passport, credentials);
+
 // Routes
-var informationRoute = require('./routes/information');
-var pricesRoute = require('./routes/prices');
-var newsRoute = require('./routes/news');
-var dataPointsRoute = require('./routes/data-points');
-var usersRoute = require('./routes/users');
+var informationRoute = require('./routes/information')(credentials);
+var pricesRoute = require('./routes/prices')(credentials);
+var newsRoute = require('./routes/news')(credentials);
+var dataPointsRoute = require('./routes/data-points')(credentials);
+var usersRoute = require('./routes/users')();
 
 var app = express();
 app.use(expressSession({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));

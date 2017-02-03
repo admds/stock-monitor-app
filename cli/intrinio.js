@@ -53,7 +53,7 @@ let getCompaniesForPage = function(companies, pageNumber, callback) {
                 }
             }
     })
-    .auth(credentials.username, credentials.password, false);
+    .auth(credentials.intrinio.username, credentials.intrinio.password, false);
 };
 
 let run = function(file) {
