@@ -6,7 +6,7 @@ var https = require('https');
 var express = require('express');
 var winston = require('winston');
 var passport = require('passport');
-
+var mongoose = require('mongoose');
 var connectEnsureLogin = require('connect-ensure-login');
 var expressSession = require('express-session');
 var bodyParser = require('body-parser');
@@ -18,6 +18,10 @@ if (process.env.PROD) {
 }
 
 require('./config/passport')(passport, credentials);
+
+// MongoDB configuration
+var configDB = require('./config/database.js');
+mongoose.connect(configDB.url);
 
 // Routes
 var informationRoute = require('./routes/information')(credentials);

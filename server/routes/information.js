@@ -35,7 +35,7 @@ module.exports = function(credentials) {
 		                response.send(body);
 		            }
 		        })
-		        .auth(credentials.username, credentials.password, false);
+		        .auth(credentials.intrinio.username, credentials.intrinio.password, false);
 			});
 		}
 	    else

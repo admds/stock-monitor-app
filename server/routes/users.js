@@ -3,8 +3,7 @@
 var express = require('express');
 var winston = require('winston');
 var router = express.Router();
-var UserStorage = require('../user-storage.js');
-var userStorage = new UserStorage.UserStorage();
+var User = require('../user-storage');
 
 module.exports = function() {
     router.get('/', function(request, response) {
@@ -14,7 +13,7 @@ module.exports = function() {
                 return;
             }
 
-            userStorage.getUser(request.query.id, function(error, user) {
+            User.findOne({profileId: request.query.id}, function(error, user) {
                 if (error) {
                     var errorMessage = {
                         message:'There was an error retrieving the user with id ' + request.query.id + '.',
@@ -22,7 +21,7 @@ module.exports = function() {
                      };
 
                     winston.error('%s Error: ', errorMessage.message, error);
-                    response.statusCode(500).send(errorMessage);
+                    response.status(500).send(errorMessage);
                     return;
                 }
 
@@ -36,12 +35,12 @@ module.exports = function() {
                      error: 'Not found'
                  };
 
-                response.statusCode(404).send()
+                response.status(404).send()
             });
     	}
         else
         {
-        	userStorage.getAllUsers(function(error, users) {
+            User.find({}, function(error, users) {
                 if (error) {
                     var errorMessage = {
                         message:'There was an error retrieving all the users.',
@@ -49,7 +48,7 @@ module.exports = function() {
                      };
 
                     winston.error('%s Error: ', errorMessage.message, error);
-                    response.statusCode(500).send(errorMessage);
+                    response.status(500).send(errorMessage);
                     return;
                 }
 
@@ -60,9 +59,35 @@ module.exports = function() {
 
     router.post( '/', function(request, response) {
         if(request.query && request.query.id && request.body) {
-            userStorage.setUser(request.body);
-            var message = {message: 'User with id ' + request.body.id + ' updated.'};
-            response.send(message);
+            User.findOne({profileId: request.query.id}, function(findError, user) {
+                if (findError || !user) {
+                    var findErrorMessage = {
+                        message:'The user with id ' + request.query.id + ' could not be found.',
+                        error: findError
+                    };
+                    winston.error(findErrorMessage.message, findError);
+                    response.status(404).send(findErrorMessage);
+                    return;
+                }
+
+                user.profileId = request.query.id;
+                user.name = request.body.name;
+                user.stocks = request.body.stocks;
+                user.save(function(saveError) {
+                    if (saveError) {
+                        var saveErrorMessage = {
+                            message:'There was an error saving the user with id ' + request.query.id + '.',
+                            error: saveError
+                        };
+                        winston.error(findErrorMessage.message, saveError);
+                        response.status(500).send(saveErrorMessage);
+                        return;
+                    }
+
+                    var message = {message: 'User with id ' + request.query.id + ' saved.'};
+                    response.send(message);
+                });
+            });
             return;
         }
 
@@ -72,7 +97,7 @@ module.exports = function() {
         };
 
         winston.error(error.message);
-        response.statusCode(400).send(error);
+        response.status(400).send(error);
     });
 
     return router;

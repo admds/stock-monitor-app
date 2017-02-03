@@ -39,7 +39,7 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 
     $scope.saveCurrentUser = function() {
         $scope.user.stocks = $scope.stocks.map($scope.getSavedStockInfo);
-        $http.post('/secured/users?id=' + $scope.user.id, $scope.user, null, 'application/json').then(function(response) {
+        $http.post('/secured/users?id=' + $scope.user.profileId, $scope.user, null, 'application/json').then(function(response) {
             // handle error responses
         });
     };
