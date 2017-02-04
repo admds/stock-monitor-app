@@ -1,0 +1,334 @@
+/*Navbar*/
+.navbar-default .navbar-brand {
+    color: #1d212a;
+    text-transform: uppercase;
+}
+
+.navbar-default .navbar-brand span {
+    font-weight: 700;
+}
+
+.navbar-default > .container-fluid:first-of-type {
+    background-color: #FFFFFF;
+}
+
+.form-control {
+    background-color: #eee;
+    border: 1px solid #DDD;
+    border-radius: 2px;
+    box-shadow: none;
+    margin-bottom: 10px;
+    padding: 8px 12px 9px 12px;
+}
+
+.btn {
+    border: none;
+    font-size: 15px;
+    font-weight: normal;
+    border-radius: 3px;
+    padding: 8px 14px;
+    margin-bottom: 5px;
+    margin-right: 10px;
+}
+
+.btn-primary, .btn-primary:active, .btn-primary:focus  {
+    color: #fff;
+    background-color: #556b8d;
+    border: none;
+}
+
+.btn-primary:disabled, .btn-primary:hover {
+    background-color: #5A7196;
+}
+
+.btn-primary:disabled:hover {
+    background-color: #919FB5;
+}
+
+.btn-primary.btn-trans {
+    color: #556b8d;
+    background-color: transparent;
+    border: solid thin #556b8d;
+}
+
+.glyphicon-chevron-down {
+    padding-left: 5px;
+}
+
+.dropdown-menu {
+    border-radius: 2px;
+    box-shadow: none;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.panel-default > .panel-heading {
+    border-color: #eff2f7;
+    background: #fff;
+    color: #767676;
+}
+
+.panel > .panel-heading {
+    font-weight: 400;
+    text-transform: uppercase;
+    padding: 14px 10px;
+}
+
+.panel {
+    border: none;
+    margin-bottom: 20px;
+    background-color: #fff;
+}
+
+.panel-open > div.panel-heading {
+    color: #fff;
+    background-color: #556b8d;
+    border-color: #556b8d;
+}
+
+.panel-heading > .panel-title {
+    font-size: 0.813em;
+    font-weight: bold;
+}
+
+p {
+    font-size: 0.875em;
+}
+
+.total.text-center a {
+    color: #565656;
+}
+
+.panel-solid-info > .panel-body > .total.text-center a {
+    color: #fff;
+}
+
+.row-chart, .row-news {
+    padding-left: 15px;
+}
+
+.panel.panel-default > .panel-heading > .panel-title > a > .ng-binding > a {
+    text-decoration: none;
+    outline: none;
+    color: #2e2e32;
+}
+
+.panel.panel-default.panel-open > .panel-heading > .panel-title > a > .ng-binding > a {
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+}
+
+.panel.panel-default > .panel-heading > .panel-title > a > .ng-binding > a:hover {
+    text-decoration: none;
+    color: #999999;
+}
+
+.btn-group {
+    margin-bottom: 15px;
+    margin-top: 15px;
+}
+
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    font-weight: 500px;
+    line-height: 1.1;
+}
+
+.col-md-6 {
+    padding-right: 0px;
+}
+
+.favorite.glyphicon.glyphicon-heart, .favorite.glyphicon.glyphicon-heart-empty {
+    color: #ff4d4d;
+}
+
+.glyphicon.glyphicon-remove {
+    color: #2e2e32;
+}
+
+body {
+    background-color: #F6F8F8;
+    color: #565656;
+    font-family: "Open Sans", Helvetica, Arial, sans-serif;
+}
+
+.panel-solid-success > .panel-body, .panel-solid-success > .panel-footer, .panel-solid-success > .panel-heading {
+    background: #27b6af;
+    color: #fff;
+    border: none;
+}
+
+.panel-solid-info > .panel-body, .panel-solid-info > .panel-footer, .panel-solid-info > .panel-heading {
+    background: #1f7bb6;
+    color: #fff;
+    border: none;
+}
+
+.widget-mini .total {
+    font-size: 2em;
+    display: block;
+    font-weight: 300;
+}
+
+.widget-mini .title {
+    font-size: 1em;
+    display: block;
+}
+
+li {
+    cursor: pointer;
+}
+
+.input-quantity {
+    padding-left: 0px;
+}
+
+.input-price {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#button-owned-confirm {
+    margin-right: 0px;
+}
+
+.login-dropdown {
+    font-size: 0.9em;
+    font-weight: 600;
+    padding: 0 5px;
+    padding: 15px 15px;
+    float: right;
+    margin-right: -15px;
+    line-height: 20px;
+}
+
+.fa.fa-facebook {
+    margin-right: 5px;
+}
+
+.navbar-logout {
+    padding: 15px 15px;
+    float: right;
+    margin-right: -15px;
+    font-size: 15px;
+    line-height: 20px;
+}
+
+div.panel-default.ng-scope.ng-isolate-scope.panel {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-right: 5px;
+}
+
+.alert-danger {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    margin: 5px;
+    width: 50%;
+}
+
+/*Fade CSS*/
+.fade {
+    transition: all linear 900ms;
+    opacity: 1;
+}
+
+.fade.ng-hide {
+    opacity: 0;
+}
+/*Fade CSS end*/
+
+/* Left and Right align CSS*/
+.left
+{
+  float: left;
+  padding-left: 15px;
+}
+
+.right
+{
+  float: right;
+  padding-right: 15px;
+}
+/* Left and Right align CSS end*/
+
+.gly-spin {
+    -webkit-animation: spin 2s infinite linear;
+    -moz-animation: spin 2s infinite linear;
+    -o-animation: spin 2s infinite linear;
+    animation: spin 2s infinite linear;
+}
+@-moz-keyframes spin {
+    0% {
+        -moz-transform: rotate(0deg);
+    }
+    100% {
+        -moz-transform: rotate(359deg);
+    }
+}
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+    }
+}
+@-o-keyframes spin {
+    0% {
+        -o-transform: rotate(0deg);
+    }
+    100% {
+        -o-transform: rotate(359deg);
+    }
+}
+@keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+.gly-rotate-90 {
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+.gly-rotate-180 {
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+.gly-rotate-270 {
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+    -webkit-transform: rotate(270deg);
+    -moz-transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+    -o-transform: rotate(270deg);
+    transform: rotate(270deg);
+}
+.gly-flip-horizontal {
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1);
+    -webkit-transform: scale(-1, 1);
+    -moz-transform: scale(-1, 1);
+    -ms-transform: scale(-1, 1);
+    -o-transform: scale(-1, 1);
+    transform: scale(-1, 1);
+}
+.gly-flip-vertical {
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1);
+    -webkit-transform: scale(1, -1);
+    -moz-transform: scale(1, -1);
+    -ms-transform: scale(1, -1);
+    -o-transform: scale(1, -1);
+    transform: scale(1, -1);
+}

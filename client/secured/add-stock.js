@@ -2,6 +2,9 @@
 'use strict';
 
 angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])
+    .run(function($rootScope) {
+        $rootScope.date = new Date();
+    })
 
 .config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/index', {
@@ -9,7 +12,7 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
     });
 }])
 
-.controller('StockLookupCtrl', function($scope, $http, $cookies) {
+.controller('StockLookupCtrl', function($rootScope, $scope, $http, $cookies) {
     $scope.alerts = [];
     $scope.stocks = [];
     $scope.stockCompanies = [];
@@ -21,7 +24,8 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
     $scope.selectedStock = undefined;
     $scope.selectedSymbol = undefined;
     $scope.submitButtonDisabled = true;
-    $scope.user = {};
+
+    $rootScope.user = {};
 
     $scope.initialize = function() {
         $scope.addSelectedSymbolWatcher();
@@ -32,14 +36,14 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
 
     $scope.loadCurrentUser = function() {
         $http.get('/secured/users?id=current').then(function(response) {
-            $scope.user = response.data;
-            $scope.stocks = $scope.user.stocks;
+            $rootScope.user = response.data;
+            $scope.stocks = $rootScope.user.stocks;
         });
     };
 
     $scope.saveCurrentUser = function() {
-        $scope.user.stocks = $scope.stocks.map($scope.getSavedStockInfo);
-        $http.post('/secured/users?id=' + $scope.user.profileId, $scope.user, null, 'application/json').then(function(response) {
+        $rootScope.user.stocks = $scope.stocks.map($scope.getSavedStockInfo);
+        $http.post('/secured/users?id=' + $rootScope.user.profileId, $rootScope.user, null, 'application/json').then(function(response) {
             // handle error responses
         });
     };

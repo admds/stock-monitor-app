@@ -24,24 +24,35 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
 
     <!-- App dependencies -->
-    <link rel="stylesheet" href="client/app.css"></link>
+    <link rel="stylesheet" href="/client/app.css"></link>
+
     <script src="/client/login.js"></script>
 
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#"><i class="glyphicon glyphicon-stats"></i><span>Stock</span> Monitor</a>
-            </div>
-            <div class="navbar-header right" uib-dropdown>
-                <a class="login-dropdown" uib-dropdown-toggle>Login<i class="glyphicon glyphicon-chevron-down"></i></a>
-                <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="logi-dropdown">
+    <header id="header" class="ng-scope">
+        <div class="brand ng-scope">
+            <a href="index.html" class="logo">
+                <i class="glyphicon glyphicon-stats"></i>
+                <span>stock</span>monitor</a>
+        </div>
+
+        <ul class="nav navbar-nav navbar-right ng-scope">
+             <li class="profile hidden-xs" uib-dropdown>
+                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" uib-dropdown-toggle>
+                    <span class="meta">
+                        <span class="text">Login</span>
+                        <span class="caret"></span>
+                    </span>
+                </a>
+                <ul class="dropdown-menu" role="menu" uib-dropdown-menu>
                     <li>
-                        <a href="/auth/facebook"><i class="fa fa-facebook"></i>Login with Facebook</a>
+                        <a href="/auth/facebook">
+                            <span class="icon"><i class="fa fa-user"></i>
+                            </span>Login to Facebook</a>
                     </li>
                 </ul>
-            </div>
-        </div>
-    </nav>
+            </li>
+        </ul>
+    </header>
 
     <!--[if lt IE 7]>
     <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>

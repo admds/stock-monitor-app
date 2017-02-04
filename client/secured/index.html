@@ -31,22 +31,34 @@
 
     <!-- App dependencies -->
     <link rel="stylesheet" href="/client/app.css"></link>
+
     <script src="/secured/app.js"></script>
     <script src="/secured/add-stock.js"></script>
 
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#"><i class="glyphicon glyphicon-stats"></i><span>Stock</span> Monitor</a>
-            </div>
-            <div class="navbar-header right">
-                <a class="navbar-logout" href="/logout">Logout</a>
-            </div>
-            <!-- <ul class="nav navbar-nav">
-                <li class="text-right right"><a href="/logout">Logout</a></li>
-            </ul> -->
+
+    <header id="header" class="ng-scope">
+        <div class="brand ng-scope">
+            <a href="index.html" class="logo">
+                <i class="glyphicon glyphicon-stats"></i>
+                <span>stock</span>monitor</a>
         </div>
-    </nav>
+
+        <ul class="nav navbar-nav navbar-right ng-scope">
+             <li class="profile hidden-xs" uib-dropdown>
+                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" uib-dropdown-toggle>
+                    <span class="meta">
+                        <span class="text">{{user.name}}</span>
+                        <span class="caret"></span>
+                    </span>
+                </a>
+                <ul class="dropdown-menu" role="menu" uib-dropdown-menu>
+                    <li>
+                        <a href="/logout">Logout</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </header>
 
     <!--[if lt IE 7]>
     <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
