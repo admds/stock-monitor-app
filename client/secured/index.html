@@ -30,35 +30,41 @@
     <script src="/client/third-party/highstock.js"></script>
 
     <!-- App dependencies -->
+    <link rel="stylesheet" href="/client/animation.css"></link>
     <link rel="stylesheet" href="/client/app.css"></link>
 
     <script src="/secured/app.js"></script>
     <script src="/secured/add-stock.js"></script>
 
 
-    <header id="header" class="ng-scope">
-        <div class="brand ng-scope">
-            <a href="index.html" class="logo">
-                <i class="glyphicon glyphicon-stats"></i>
-                <span>stock</span>monitor</a>
-        </div>
+    <section id="main-wrapper" class="theme-default">
+        <header id="header" class="ng-scope">
+            <div class="brand ng-scope">
+                <a href="index.html" class="logo">
+                    <i class="glyphicon glyphicon-stats"></i>
+                    <span>stock</span>monitor</a>
+            </div>
 
-        <ul class="nav navbar-nav navbar-right ng-scope">
-             <li class="profile hidden-xs" uib-dropdown>
-                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" uib-dropdown-toggle>
-                    <span class="meta">
-                        <span class="text">{{user.name}}</span>
-                        <span class="caret"></span>
-                    </span>
-                </a>
-                <ul class="dropdown-menu" role="menu" uib-dropdown-menu>
-                    <li>
-                        <a href="/logout">Logout</a>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-    </header>
+            <ul class="nav navbar-nav navbar-right ng-scope">
+                 <li class="profile hidden-xs" uib-dropdown>
+                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" uib-dropdown-toggle>
+                        <span class="meta">
+                            <span class="text">{{user.name}}</span>
+                            <span class="caret"></span>
+                        </span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu" uib-dropdown-menu>
+                        <li>
+                            <span class="icon"><i class="fa fa-sign-out"></i></span>
+                            <a href="/logout">Logout</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </header>
+
+            <!-- END Content wraper-->
+    </section>
 
     <!--[if lt IE 7]>
     <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>

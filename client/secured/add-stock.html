@@ -5,273 +5,259 @@
     </a>
 </script>
 
-<div class="container-fluid" ng-controller="StockLookupCtrl">
-    <div class="row">
-        <div class="col-md-5">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Search</h3>
-                </div>
-                <div class=panel-body>
-                    <form ng-submit="submit()" role="search">
-                        <div uib-alert
-                        class="alert"
-                        dismiss-on-timeout="3000"
-                        ng-repeat="alert in alerts"
-                        close="closeAlert($index)"
-                        ng-class="'alert-danger'">{{alert.msg}}
+<section class="main-content-wrapper" ng-controller="StockLookupCtrl">
+    <section id="main-content" class="animated fadeInRight ng-scope">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Search</h3>
                     </div>
+                    <div class="panel-body">
+                        <form ng-submit="submit()" role="search" class="ng-pristine ng-valid">
+                            <div uib-alert
+                            class="alert"
+                            dismiss-on-timeout="3000"
+                            ng-repeat="alert in alerts"
+                            close="closeAlert($index)"
+                            ng-class="'alert-danger'">{{alert.msg}}
+                            </div>
 
-                    <div class="col-sm-10">
-                        <input type="text" readonly="readonly" class="form-control" value="Stock Lookup: {{selectedSymbol.ticker}} {{selectedSymbol.name}}">
+                            <div class="form-group">
+                                <input type="text" readonly="readonly" class="form-control" value="Stock Lookup: {{selectedSymbol.ticker}} {{selectedSymbol.name}}">
+                            </div>
+                            <div class="form-group">
+                                <input id="stockSymbolEntered"
+                                type="text"
+                                ng-model="selectedSymbol"
+                                uib-typeahead="stockInfo as stockInfo.ticker for stockInfo in stockCompanies | filter:$viewValue | limitTo:20"
+                                placeholder="Stock Symbol"
+                                class="form-control"
+                                typeahead-template-url="typeahead.html"/>
+                            </div>
+                            <button type="submit" class="btn btn-primary" ng-disabled="submitButtonDisabled">Submit</button>
+                        </form>
                     </div>
-
-                    <div class="form-group col-sm-10">
-                        <input type="text"
-                        ng-model="selectedSymbol"
-                        uib-typeahead="stockInfo as stockInfo.ticker for stockInfo in stockCompanies | filter:$viewValue | limitTo:20"
-                        placeholder="Stock Symbol"
-                        class="form-control"
-                        typeahead-template-url="typeahead.html"/>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Watch List
+                            <span class="pull-right fade" ng-show="hasStockSelectedDate()">{{selectedStock.symbol}} data from {{selectedStock.date}}</span>
+                        </h3>
                     </div>
-
-                    <div class="col-sm-10">
-                        <button type="submit"
-                        class="btn btn-primary"
-                        ng-disabled="submitButtonDisabled">
-                        Submit
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-    <div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <div class="panel-title row">
-                    <span class="text-left left">Watch list</span>
-                    <span class="text-right right fade" ng-show="hasStockSelectedDate()">{{selectedStock.symbol}} data from {{selectedStock.date}}</span>
-                </div>
-            </div>
-            <div class="panel-body">
-                <div>
-                    <!-- Sort dropdown -->
-                    <div class="btn-group" uib-dropdown is-open="status.isopen">
-                        <button id="single-button" type="button" class="btn btn-default btn-primary btn-trans" uib-dropdown-toggle >
-                            Sort By<span class="glyphicon glyphicon-chevron-down"></span>
-                        </button>
-                        <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
-                            <li role="menuitem" >
-                                <a ng-click="sortStocks('symbol')">
-                                    Symbol
-                                    <i class="glyphicon glyphicon-ok" ng-hide="orderStocksBy !== 'symbol'"></i>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a ng-click="sortStocks('name')">
-                                    Company Name
-                                    <i class="glyphicon glyphicon-ok" ng-hide="orderStocksBy !== 'name'"></i>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a ng-click="sortStocks('price')">
-                                    Current Price
-                                    <i class="glyphicon glyphicon-ok" ng-hide="orderStocksBy !== 'price'">
-                                    </i>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a ng-click="sortStocks('sector')">Sector
-                                    <i class="glyphicon glyphicon-ok" ng-hide="orderStocksBy !== 'sector'"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Reverse sorting button -->
-                    <button type="button" class="btn btn-default btn-primary btn-trans" ng-click="reverseStockSorting()">
-                        <span class="glyphicon glyphicon-sort"/>
-                    </button>
-                </div>
-
-                <!-- Favorite Stocks -->
-                <div uib-accordion close-others=true>
-                    <div uib-accordion-group class="panel-default" ng-repeat="stockInfo in stocks | filter:{favorite:true} | orderBy:orderStocksBy:reverseStockOrder">
-                        <uib-accordion-heading>
-                            <a ng-click="selectStock(stockInfo)">{{stockInfo.symbol}} - {{stockInfo.name}}</a>
-                            <i class="favorite glyphicon glyphicon-heart" ng-click="favoriteStock(stockInfo.symbol)"></i>
-                            <i class="glyphicon glyphicon-cog gly-spin" ng-hide="!stockInfo.loading"></i>
-                            <i class="pull-right glyphicon glyphicon-remove"
-                            ng-click="removeStock(stockInfo.symbol)"></i>
-                        </uib-accordion-heading>
-                        <p>Sector: {{stockInfo.sector}}</p>
-                        <p>Industry Category: {{stockInfo.industryCategory}}</p>
-                        <p>Industry Group: {{stockInfo.industryGroup}}</p>
-                        <div class="row">
-                            <span class="left">
-                                <button id="button-owned-question" type="button" class="btn btn-default btn-primary btn-trans" ng-click="showDetails = ! showDetails">
-                                    Own it?
+                    <div class="panel-body">
+                        <div>
+                            <!-- Sort dropdown -->
+                            <div class="btn-group" uib-dropdown is-open="status.isopen">
+                                <button id="single-button" type="button" class="btn btn-default btn-primary btn-trans" uib-dropdown-toggle >
+                                    Sort By<span class="glyphicon glyphicon-chevron-down"></span>
                                 </button>
-                            </span>
-                            <span class="fade" ng-show="showDetails">
-                                <form ng-submit="saveOwned()" role="save-owned">
-                                    <span class="col-md-4 input-price">
-                                        <input type="text"
-                                        ng-model="priceBought"
-                                        placeholder="Price"
-                                        class="form-control"/>
-                                    </span>
-                                    <span class="col-md-3 input-quantity">
-                                        <input type="text"
-                                        ng-model="quantityBought"
-                                        placeholder="Qty"
-                                        class="form-control"/>
-                                    </span>
-                                    <span>
-                                        <button id="button-owned-confirm" type="submit" class="btn btn-default btn-primary btn-trans" ng-disabled="saveOwnedButtonDisabled">
-                                            <i class="glyphicon glyphicon-ok"></i>
+                                <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
+                                    <li role="menuitem" >
+                                        <a ng-click="sortStocks('symbol')">
+                                            Symbol
+                                            <i class="glyphicon glyphicon-ok" ng-hide="orderStocksBy !== 'symbol'"></i>
+                                        </a>
+                                    </li>
+                                    <li role="menuitem">
+                                        <a ng-click="sortStocks('name')">
+                                            Company Name
+                                            <i class="glyphicon glyphicon-ok" ng-hide="orderStocksBy !== 'name'"></i>
+                                        </a>
+                                    </li>
+                                    <li role="menuitem">
+                                        <a ng-click="sortStocks('price')">
+                                            Current Price
+                                            <i class="glyphicon glyphicon-ok" ng-hide="orderStocksBy !== 'price'">
+                                            </i>
+                                        </a>
+                                    </li>
+                                    <li role="menuitem">
+                                        <a ng-click="sortStocks('sector')">Sector
+                                            <i class="glyphicon glyphicon-ok" ng-hide="orderStocksBy !== 'sector'"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- Reverse sorting button -->
+                            <button type="button" class="btn btn-default btn-primary btn-trans" ng-click="reverseStockSorting()">
+                                <span class="glyphicon glyphicon-sort"/>
+                            </button>
+                        </div>
+
+                        <!-- Favorite Stocks -->
+                        <div uib-accordion close-others=true>
+                            <div uib-accordion-group class="panel-default" ng-repeat="stockInfo in stocks | filter:{favorite:true} | orderBy:orderStocksBy:reverseStockOrder">
+                                <uib-accordion-heading>
+                                    <a ng-click="selectStock(stockInfo)">{{stockInfo.symbol}} - {{stockInfo.name}}</a>
+                                    <i class="favorite glyphicon glyphicon-heart" ng-click="favoriteStock(stockInfo.symbol)"></i>
+                                    <i class="glyphicon glyphicon-cog gly-spin" ng-hide="!stockInfo.loading"></i>
+                                    <i class="pull-right glyphicon glyphicon-remove"
+                                    ng-click="removeStock(stockInfo.symbol)"></i>
+                                </uib-accordion-heading>
+                                <p>Sector: {{stockInfo.sector}}</p>
+                                <p>Industry Category: {{stockInfo.industryCategory}}</p>
+                                <p>Industry Group: {{stockInfo.industryGroup}}</p>
+                                <div class="row">
+                                    <span class="left">
+                                        <button id="button-owned-question" type="button" class="btn btn-default btn-primary btn-trans" ng-click="showDetails = ! showDetails">
+                                            Own it?
                                         </button>
                                     </span>
-                                </form>
-                            </span>
+                                    <span class="fade" ng-show="showDetails">
+                                        <form ng-submit="saveOwned()" role="save-owned">
+                                            <span class="col-md-4 input-price">
+                                                <input type="text"
+                                                ng-model="priceBought"
+                                                placeholder="Price"
+                                                class="form-control"/>
+                                            </span>
+                                            <span class="col-md-3 input-quantity">
+                                                <input type="text"
+                                                ng-model="quantityBought"
+                                                placeholder="Qty"
+                                                class="form-control"/>
+                                            </span>
+                                            <span>
+                                                <button id="button-owned-confirm" type="submit" class="btn btn-default btn-primary btn-trans" ng-disabled="saveOwnedButtonDisabled">
+                                                    <i class="glyphicon glyphicon-ok"></i>
+                                                </button>
+                                            </span>
+                                        </form>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <!-- Watched Stocks -->
+                        <div uib-accordion close-others=true>
+                            <div ng-repeat="stockInfo in stocks | filter:{favorite:false} | orderBy:orderStocksBy:reverseStockOrder">
+                                <div uib-accordion-group
+                                class="panel panel-default">
+                                <uib-accordion-heading>
+                                    <a ng-click="selectStock(stockInfo)">{{stockInfo.symbol}} - {{stockInfo.name}}</a>
+                                    <i class="favorite glyphicon glyphicon-heart-empty" ng-click="favoriteStock(stockInfo.symbol)"></i>
+                                    <i class="glyphicon glyphicon-cog gly-spin" ng-hide="!stockInfo.loading"></i>
+                                    <i class="pull-right glyphicon glyphicon-remove"
+                                    ng-click="removeStock(stockInfo.symbol)"></i>
+                                </uib-accordion-heading>
+
+                                <p>Sector: {{stockInfo.sector}}</p>
+                                <p>Industry Category: {{stockInfo.industryCategory}}</p>
+                                <p>Industry Group: {{stockInfo.industryGroup}}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <hr>
-
-                <!-- Watched Stocks -->
-                <div uib-accordion close-others=true>
-                    <div ng-repeat="stockInfo in stocks | filter:{favorite:false} | orderBy:orderStocksBy:reverseStockOrder">
-                        <div uib-accordion-group
-                        class="panel panel-default">
-                        <uib-accordion-heading>
-                            <a ng-click="selectStock(stockInfo)">{{stockInfo.symbol}} - {{stockInfo.name}}</a>
-                            <i class="favorite glyphicon glyphicon-heart-empty" ng-click="favoriteStock(stockInfo.symbol)"></i>
-                            <i class="glyphicon glyphicon-cog gly-spin" ng-hide="!stockInfo.loading"></i>
-                            <i class="pull-right glyphicon glyphicon-remove"
-                            ng-click="removeStock(stockInfo.symbol)"></i>
-                        </uib-accordion-heading>
-
-                        <p>Sector: {{stockInfo.sector}}</p>
-                        <p>Industry Category: {{stockInfo.industryCategory}}</p>
-                        <p>Industry Group: {{stockInfo.industryGroup}}</p>
+                </div>
+            </div>
+            <div class="col-md-6 fade" ng-show="hasStockSelected()">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="panel panel-solid-success widget-mini">
+                            <div class="panel-body">
+                                <i class="icon-bar-chart"></i>
+                                <span class="total text-center">Close Price</span>
+                                <span class="title text-center">${{selectedStock.closePrice}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="panel widget-mini">
+                            <div class="panel-body">
+                                <i class="icon-bar-chart"></i>
+                                <i class="icon-bar-chart"></i>
+                                <span class="total text-center"><a href="http://www.investopedia.com/terms/p/price-earningsratio.asp" target="_blank">P/E Ratio</a></span>
+                                <span class="title text-center">{{selectedStock.priceToEarnings}}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-</div>
-
-<div class="col-md-6 fade" ng-show="hasStockSelected()">
-    <div class="row">
-        <div class="col-md-6">
-            <div class="panel panel-solid-success widget-mini">
-                <div class="panel-body">
-                    <i class="icon-bar-chart"></i>
-                    <span class="total text-center">Close Price</span>
-                    <span class="title text-center">${{selectedStock.closePrice}}</span>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="panel widget-mini">
-                <div class="panel-body">
-                    <i class="icon-bar-chart"></i>
-                    <i class="icon-bar-chart"></i>
-                    <span class="total text-center"><a href="http://www.investopedia.com/terms/p/price-earningsratio.asp" target="_blank">P/E Ratio</a></span>
-                    <span class="title text-center">{{selectedStock.priceToEarnings}}</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="panel widget-mini">
-                <div class="panel-body">
-                    <i class="icon-bar-chart"></i>
-                    <span class="total text-center">Daily Stats</span>
-                    <span class="title text-center">High: ${{selectedStock.dayHigh}}</span>
-                    <span class="title text-center">Low: ${{selectedStock.dayLow}}</span>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="panel panel-solid-info widget-mini">
-                <div class="panel-body">
-                    <i class="icon-bar-chart"></i>
-                    <span class="total text-center"><a href="http://www.investopedia.com/terms/r/rsi.asp" target="_blank">RSI</a></span>
-                    <span class="title text-center">{{selectedStock.relativeStrengthIndex.current}}</span>
-                </div>
-            </div>
-        </div>
-
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="panel panel-solid-success widget-mini">
-                <div class="panel-body">
-                    <i class="icon-bar-chart"></i>
-                    <span class="total text-center">52 Week Stats</span>
-                    <span class="title text-center">High: ${{selectedStock.high52week}}</span>
-                    <span class="title text-center">Low: ${{selectedStock.low52week}}</span>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="panel widget-mini">
-                <div class="panel-body">
-                    <i class="icon-bar-chart"></i>
-                    <span class="total text-center"><a href="http://www.investopedia.com/university/movingaverage/movingaverages2.asp" target="_blank">Moving Averages</a></span>
-                    <div class="row">
-                        <span class="title text-left left">MA(15): ${{selectedStock.movingAverages.days15}}</span>
-                        <span class="title text-right right">MA(100): ${{selectedStock.movingAverages.days100}}</span>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="panel widget-mini">
+                            <div class="panel-body">
+                                <i class="icon-bar-chart"></i>
+                                <span class="total text-center">Daily Stats</span>
+                                <span class="title text-center">High: ${{selectedStock.dayHigh}}</span>
+                                <span class="title text-center">Low: ${{selectedStock.dayLow}}</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="row">
-                        <span class="title text-left left">MA(50): ${{selectedStock.movingAverages.days50}}</span>
-                        <span class="title text-right right">MA(200): ${{selectedStock.movingAverages.days200}}</span>
+                    <div class="col-md-6">
+                        <div class="panel panel-solid-info widget-mini">
+                            <div class="panel-body">
+                                <i class="icon-bar-chart"></i>
+                                <span class="total text-center"><a href="http://www.investopedia.com/terms/r/rsi.asp" target="_blank">RSI</a></span>
+                                <span class="title text-center">{{selectedStock.relativeStrengthIndex.current}}</span>
+                            </div>
+                        </div>
                     </div>
+
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="row-chart row">
-        <div class="fade" ng-show="hasStockSelected()">
-            <div class="panel panel-default">
-                <div id="container"></div>
-            </div>
-        </div>
-    </div>
-    <div class="row row-news">
-        <div id="panel-news" class="fade" ng-show="hasStockSelected()">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title"><i class="glyphicon glyphicon-briefcase"></i>&nbsp;News
-                        <i class="glyphicon glyphicon-cog gly-spin" ng-hide="!selectedStock.loadingStockNews"></i>
-                    </h3>
-                </div>
-                <div class=panel-body>
-                    <div uib-accordion close-others=true>
-                        <div ng-repeat="newsInfo in selectedStock.news">
-                            <div uib-accordion-group
-                            class="panel panel-default">
-                            <uib-accordion-heading>
-                                <a>{{newsInfo.title}}</a>
-                                <p>{{newsInfo.publicationDate.toLocaleString()}}</p>
-                            </uib-accordion-heading>
-                            <p>{{newsInfo.summary}}</p>
-                            <p><a href="{{newsInfo.url}}" target="_blank">Read More</a>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="panel panel-solid-success widget-mini">
+                            <div class="panel-body">
+                                <i class="icon-bar-chart"></i>
+                                <span class="total text-center">52 Week Stats</span>
+                                <span class="title text-center">High: ${{selectedStock.high52week}}</span>
+                                <span class="title text-center">Low: ${{selectedStock.low52week}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="panel widget-mini">
+                            <div class="panel-body">
+                                <i class="icon-bar-chart"></i>
+                                <span class="total text-center"><a href="http://www.investopedia.com/university/movingaverage/movingaverages2.asp" target="_blank">Moving Averages</a></span>
+                                <div class="row moving-average">
+                                    <span class="title text-left">MA(15): ${{selectedStock.movingAverages.days15}}
+                                        <span class="pull-right">MA(100): ${{selectedStock.movingAverages.days100}}</span>
+                                    </span>
+                                </div>
+                                <div class="row moving-average">
+                                    <span class="title">MA(50): ${{selectedStock.movingAverages.days50}}
+                                        <span class="pull-right">MA(200): ${{selectedStock.movingAverages.days200}}</span>
+                                    </span>
+
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
 
-</div>
+            <div class="col-md-6 fade" ng-show="hasStockSelected()">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div id="container"></div>
+                    </div>
+                </div>
 
-
-</div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">News</h3>
+                    </div>
+                    <div class=panel-body>
+                        <div uib-accordion close-others=true>
+                            <div ng-repeat="newsInfo in selectedStock.news">
+                                <div uib-accordion-group
+                                class="panel panel-default">
+                                <uib-accordion-heading>
+                                    <a>{{newsInfo.title}}</a>
+                                    <p>{{newsInfo.publicationDate.toLocaleString()}}</p>
+                                </uib-accordion-heading>
+                                <p>{{newsInfo.summary}}</p>
+                                <p><a href="{{newsInfo.url}}" target="_blank">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </section></div></div>
+</section>
