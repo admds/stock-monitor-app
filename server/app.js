@@ -4,7 +4,29 @@ var fs = require('fs');
 var path    = require('path');
 var https = require('https');
 var express = require('express');
-var winston = require('winston');
+var winstonLogger = require('winston');
+require('winston-daily-rotate-file');
+
+// Setup file and console logging.
+var logLevel = process.env.PROD ? 'error' : 'debug';
+var fileTransport = new winstonLogger.transports.DailyRotateFile({
+  filename: './stock-monitor.log',
+  datePattern: 'yyyy-MM-dd.',
+  prepend: true,
+  level: logLevel
+});
+
+// Setup console logging.
+var consoleTransport = new (winstonLogger.transports.Console)({ level: logLevel});
+
+// Add the transports to the logger.
+var winston = new (winstonLogger.Logger)({
+  transports: [
+	consoleTransport,
+	fileTransport
+  ]
+});
+
 var passport = require('passport');
 var mongoose = require('mongoose');
 var connectEnsureLogin = require('connect-ensure-login');
@@ -12,8 +34,9 @@ var expressSession = require('express-session');
 var bodyParser = require('body-parser');
 
 var credentials = require('../credentials-test.json');
-winston.info('process.env.PROD', process.env.PROD);
+
 if (process.env.PROD) {
+	winston.info('PROD environment');
 	credentials = require('../credentials.json');
 }
 
@@ -77,5 +100,5 @@ https.createServer({
   key: fs.readFileSync('./server/certificate/device.key'),
   cert: fs.readFileSync('./server/certificate/device.crt')
 }, app).listen((process.env.PORT || 5555), function() {
-	winston.info('Application started.');
+	winston.info('Application started on port:', process.env.PORT || 5555);
 });
