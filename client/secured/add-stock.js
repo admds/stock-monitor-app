@@ -58,9 +58,9 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
     // Update cookie with price bought and quantity bought of certain stock.
     $scope.saveOwned = function() {
         // Check that fields are with information to save.
-        if ($scope.selectedSymbol && $scope.selectedSymbol.ticker && $scope.priceBought && $scope.quantityBought) {
-            // add price and quantity
-            // save current user
+        if ($scope.selectedStock && $scope.selectedStock.priceBought && $scope.selectedStock.quantityBought) {
+            // Saved already.
+            // TODO: Alerts if nothing in field
         }
     };
 
@@ -82,7 +82,9 @@ angular.module('stockMonitorApp.index', ['ngRoute', 'ngCookies', 'ngAnimate', 'n
                     industry_group : '',
                     favorite: false,
                     loading: true,
-                    movingAverages : {}
+                    movingAverages : {},
+                    priceBought: 0.00,
+                    quantityBought: 0.00
                 };
 
                 $scope.addOrUpdateStock(stockInfo);

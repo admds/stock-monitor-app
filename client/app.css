@@ -40,6 +40,11 @@ body {
     padding-left: 5px;
 }
 /*END Glyphicon*/
+/*Own it - Bottom Margin*/
+#button-owned-question {
+    margin-bottom: 15px;
+}
+/*END Own it - Bottom Margin*/
 /*Dropdown*/
 a.login-dropdown {
     color: #1D212A;
@@ -1481,25 +1486,25 @@ fieldset[disabled] .btn-warning.active {
   background-color: transparent;
   border: solid thin #909aa0;
 }
-.btn-default.btn-trans:hover,
+/*.btn-default.btn-trans:hover,
 .btn-default.btn-trans:active,
 .btn-default.btn-trans:focus {
   color: #fff;
   background-color: #909aa0;
   border: solid thin #909aa0;
-}
+}*/
 .btn-primary.btn-trans {
   color: #556b8d;
   background-color: transparent;
   border: solid thin #556b8d;
 }
-.btn-primary.btn-trans:hover,
+/*.btn-primary.btn-trans:hover,
 .btn-primary.btn-trans:active,
 .btn-primary.btn-trans:focus {
   color: #fff;
   background-color: #556b8d;
   border: solid thin #556b8d;
-}
+}*/
 .btn-success.btn-trans {
   color: #27b6af;
   background-color: transparent;
