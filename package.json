@@ -32,7 +32,8 @@
     "pg": "^6.1.2",
     "redis": "^2.6.5",
     "request": "^2.79.0",
-    "winston": "^2.3.0"
+    "winston": "^2.3.0",
+    "winston-daily-rotate-file": "^1.4.4"
   },
   "devDependencies": {
     "bower": "^1.8.0",
